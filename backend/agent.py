@@ -293,6 +293,7 @@ Recent Events:
 
             # Check if agent wants to use a tool
             if message.tool_calls:
+                # Native function calling (OpenAI-style)
                 tool_call = message.tool_calls[0]
                 action_name = tool_call.function.name
                 arguments = json.loads(tool_call.function.arguments)
@@ -300,16 +301,39 @@ Recent Events:
                 print(f"LLM Decision: {self.name} wants {action_name} with args {arguments}")
                 print(f"  Reasoning: {reasoning[:100]}...")
 
-                # Let the LLM's decision go through directly - it will learn from failures
                 return {
                     "action": action_name,
                     "arguments": arguments,
                     "reasoning": reasoning
                 }
             else:
-                # Model didn't make a tool call - this shouldn't happen with Mistral
-                print(f"WARNING: {self.name} - No tool call returned")
-                print(f"  LLM Response: {reasoning}")
+                # Try to parse JSON from the content (for models that don't support native tool calls)
+                print(f"INFO: {self.name} - Parsing tool call from content")
+
+                try:
+                    # Look for JSON array in the response like [{"name": "action", "arguments": {...}}]
+                    import re
+                    json_match = re.search(r'\[{.*?}\]', reasoning, re.DOTALL)
+                    if json_match:
+                        actions = json.loads(json_match.group())
+                        if actions and isinstance(actions, list) and len(actions) > 0:
+                            first_action = actions[0]
+                            action_name = first_action.get("name")
+                            arguments = first_action.get("arguments", {})
+
+                            print(f"LLM Decision (parsed): {self.name} wants {action_name} with args {arguments}")
+
+                            return {
+                                "action": action_name,
+                                "arguments": arguments,
+                                "reasoning": reasoning
+                            }
+                except Exception as parse_error:
+                    print(f"  Failed to parse JSON from content: {parse_error}")
+
+                # No valid tool call found
+                print(f"WARNING: {self.name} - No tool call found in response")
+                print(f"  LLM Response: {reasoning[:200]}...")
 
                 # Default to a safe action
                 return {
