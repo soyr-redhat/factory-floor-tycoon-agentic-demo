@@ -267,9 +267,9 @@ Recent Events:
         if self.action_history:
             context += "\nYour Recent Actions (last 5 turns):\n"
             for action_record in self.action_history[-5:]:
-                context += f"- {action_record['action']} → {action_record['result']}\n"
-                if action_record.get('reasoning'):
-                    context += f"  Plan: {action_record['reasoning'][:100]}...\n"
+                args_str = ", ".join(f"{k}={v}" for k, v in action_record.get('arguments', {}).items()) if action_record.get('arguments') else ""
+                action_display = f"{action_record['action']}({args_str})" if args_str else action_record['action']
+                context += f"- {action_display} → {action_record['result']}\n"
 
         messages = [
             {"role": "system", "content": self.system_prompt},
