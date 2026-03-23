@@ -21,15 +21,22 @@ function ProfitChart({ profitHistory, agents }) {
     // Calculate which round the mouse is over
     const maxRound = profitHistory.length
     const xScale = chartWidth / Math.max(maxRound - 1, 1)
-    const round = Math.round((x - padding) / xScale)
 
-    if (round >= 0 && round < profitHistory.length) {
-      const snapshot = profitHistory[round]
+    // Find the closest data point
+    let closestRound = Math.max(0, Math.min(Math.round((x - padding) / xScale), profitHistory.length - 1))
+
+    // Snap to the actual data point position for better accuracy
+    const actualX = padding + closestRound * xScale
+    const distance = Math.abs(x - actualX)
+
+    // Only show tooltip if mouse is reasonably close to a data point (within 20px)
+    if (distance < 20 && closestRound >= 0 && closestRound < profitHistory.length) {
+      const snapshot = profitHistory[closestRound]
 
       setTooltip({
         x: e.clientX - rect.left,
         y: e.clientY - rect.top,
-        round: round,
+        round: closestRound,
         data: snapshot
       })
     } else {
