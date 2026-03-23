@@ -10,8 +10,16 @@ function ProfitChart({ profitHistory, agents }) {
 
     const canvas = canvasRef.current
     const rect = canvas.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
+
+    // Get mouse position in display space
+    const displayX = e.clientX - rect.left
+    const displayY = e.clientY - rect.top
+
+    // Scale mouse coordinates from display space to canvas space
+    const scaleX = canvas.width / rect.width
+    const scaleY = canvas.height / rect.height
+    const x = displayX * scaleX
+    const y = displayY * scaleY
 
     const width = canvas.width
     const height = canvas.height
@@ -34,8 +42,8 @@ function ProfitChart({ profitHistory, agents }) {
       const snapshot = profitHistory[closestRound]
 
       setTooltip({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
+        x: displayX,
+        y: displayY,
         round: closestRound,
         data: snapshot
       })
