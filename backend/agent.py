@@ -271,14 +271,14 @@ Recent Events:
                 model=self.model,
                 messages=messages,
                 tools=self.get_available_tools(),
-                tool_choice="required",  # Force the model to use a tool
+                tool_choice="auto",  # Let model decide whether to use a tool
                 temperature=0.7
             )
 
             message = response.choices[0].message
 
-            # Extract reasoning
-            reasoning = message.content or "Analyzing situation..."
+            # Extract reasoning from the model's response
+            reasoning = message.content or "Making decision..."
             self.state.thinking = reasoning
 
             # Check if agent wants to use a tool
@@ -288,79 +288,24 @@ Recent Events:
                 arguments = json.loads(tool_call.function.arguments)
 
                 print(f"LLM Decision: {self.name} wants {action_name} with args {arguments}")
+                print(f"  Reasoning: {reasoning[:100]}...")
 
-                # GUARDRAILS: Validate and potentially adjust the LLM's decision
-                validated = self._validate_action(action_name, arguments, factory_state)
-
-                if validated["valid"]:
-                    print(f"  ✓ Valid action")
-                    return {
-                        "action": validated["action"],
-                        "arguments": validated["arguments"],
-                        "reasoning": reasoning
-                    }
-                else:
-                    print(f"  ✗ Invalid: {validated['reason']}. Suggesting: {validated['alternative']}")
-                    return {
-                        "action": validated["alternative"],
-                        "arguments": validated["alt_arguments"],
-                        "reasoning": f"{reasoning} [Adjusted: {validated['reason']}]"
-                    }
-            else:
-                # Model doesn't support function calling properly
-                # Use smart fallback based on factory state
-                print(f"WARNING: {self.name} - No tool call returned (model doesn't support function calling), using fallback logic")
-                print(f"  LLM Response: {reasoning[:100]}...")
-
-                # PRIORITY 1: Critical energy - must rest or can't do anything
-                if self.state.energy < 20:
-                    return {
-                        "action": "rest",
-                        "arguments": {},
-                        "reasoning": f"Fallback: Critical energy ({self.state.energy:.1f}%), must rest"
-                    }
-
-                # PRIORITY 2: Ship if we have inventory and orders (MAKE PROFIT!)
-                if self.state.inventory >= 1 and self.state.pending_orders >= 1 and self.state.energy >= 4:
-                    units_to_ship = min(5, self.state.pending_orders, self.state.inventory)
-                    # Check if we have enough energy to ship
-                    if self.state.energy >= units_to_ship * 4:
-                        return {
-                            "action": "ship_orders",
-                            "arguments": {"units": units_to_ship},
-                            "reasoning": f"Fallback: Shipping {units_to_ship} units to make profit!"
-                        }
-
-                # PRIORITY 3: Broken machines block workflow (if we have energy to fix)
-                broken_machines = [m for m, status in factory_state.machine_status.items() if not status]
-                if broken_machines and self.state.energy >= 20:
-                    return {
-                        "action": "repair_machine",
-                        "arguments": {"machine": broken_machines[0]},
-                        "reasoning": f"Fallback: Repairing {broken_machines[0]}"
-                    }
-
-                # PRIORITY 4: Low energy - rest before it's critical
-                if self.state.energy < 40:
-                    return {
-                        "action": "rest",
-                        "arguments": {},
-                        "reasoning": f"Fallback: Low energy ({self.state.energy:.1f}%), resting"
-                    }
-
-                # PRIORITY 5: Produce more items if we have energy
-                if self.state.energy >= 15:
-                    return {
-                        "action": "work_assembly",
-                        "arguments": {"units": 3},
-                        "reasoning": "Fallback: Producing items to build inventory"
-                    }
-
-                # Last resort - rest
+                # Let the LLM's decision go through directly - it will learn from failures
                 return {
-                    "action": "rest",
+                    "action": action_name,
+                    "arguments": arguments,
+                    "reasoning": reasoning
+                }
+            else:
+                # Model didn't make a tool call - this shouldn't happen with Mistral
+                print(f"WARNING: {self.name} - No tool call returned")
+                print(f"  LLM Response: {reasoning}")
+
+                # Default to a safe action
+                return {
+                    "action": "check_inventory",
                     "arguments": {},
-                    "reasoning": "Fallback: Default to resting"
+                    "reasoning": reasoning or "No tool call made"
                 }
 
         except Exception as e:
