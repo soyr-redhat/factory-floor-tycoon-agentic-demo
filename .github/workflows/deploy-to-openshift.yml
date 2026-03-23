@@ -34,9 +34,9 @@ jobs:
         run: |
           oc login --token=${{ secrets.OPENSHIFT_LOGIN_TOKEN }} --server=${{ env.OCP_SERVER }} --insecure-skip-tls-verify
 
-      - name: Create namespace if not exists
+      - name: Verify namespace exists
         run: |
-          oc create namespace ${{ env.NAMESPACE }} --dry-run=client -o yaml | oc apply -f -
+          oc get namespace ${{ env.NAMESPACE }} || echo "Namespace does not exist - please create it manually"
 
       - name: Apply secrets
         run: |
