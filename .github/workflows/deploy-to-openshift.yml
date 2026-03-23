@@ -32,7 +32,7 @@ jobs:
 
       - name: Login to OpenShift
         run: |
-          oc login ${{ env.OCP_SERVER }} --token=${{ secrets.OPENSHIFT_LOGIN_TOKEN }} --insecure-skip-tls-verify=true
+          oc login --token=${{ secrets.OPENSHIFT_LOGIN_TOKEN }} --server=${{ env.OCP_SERVER }} --insecure-skip-tls-verify
 
       - name: Create namespace if not exists
         run: |
