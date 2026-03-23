@@ -108,6 +108,17 @@ class FactorySimulation:
                     self.state
                 )
 
+                # Track action in agent's history for memory
+                agent.action_history.append({
+                    "action": decision["action"],
+                    "arguments": decision.get("arguments", {}),
+                    "reasoning": decision.get("reasoning", ""),
+                    "result": result["message"]
+                })
+                # Keep only last 10 actions to avoid context bloat
+                if len(agent.action_history) > 10:
+                    agent.action_history.pop(0)
+
                 # Map function names to TaskType for logging
                 action_map = {
                     "work_assembly": "assembly",

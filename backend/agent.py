@@ -14,6 +14,7 @@ class FactoryAgent:
         self.system_prompt = system_prompt
         self.color = color
         self.state = AgentState(name=name)
+        self.action_history = []  # Track recent actions and reasoning
 
         # Initialize OpenAI client with MAAS endpoint
         self.client = OpenAI(
@@ -261,6 +262,14 @@ Recent Events:
         for agent in factory_state.agents:
             if agent.name != self.name:
                 context += f"- {agent.name}: ${agent.profit:.2f} profit, {agent.items_shipped} shipped\n"
+
+        # Add recent action history so agent can track multi-step plans
+        if self.action_history:
+            context += "\nYour Recent Actions (last 5 turns):\n"
+            for action_record in self.action_history[-5:]:
+                context += f"- {action_record['action']} → {action_record['result']}\n"
+                if action_record.get('reasoning'):
+                    context += f"  Plan: {action_record['reasoning'][:100]}...\n"
 
         messages = [
             {"role": "system", "content": self.system_prompt},
