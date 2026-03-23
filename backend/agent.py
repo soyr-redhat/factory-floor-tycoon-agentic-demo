@@ -18,7 +18,8 @@ class FactoryAgent:
         # Initialize OpenAI client with MAAS endpoint
         self.client = OpenAI(
             api_key=os.getenv("LLM_API_KEY", ""),
-            base_url=os.getenv("LLM_API_URL", "https://api.openai.com/v1")
+            base_url=os.getenv("LLM_API_URL", "https://api.openai.com/v1"),
+            timeout=30.0  # 30 second timeout to prevent hanging
         )
         self.model = os.getenv("MODEL_NAME", "gpt-3.5-turbo")
 
@@ -309,11 +310,12 @@ Recent Events:
                 }
 
         except Exception as e:
-            print(f"Error in agent decision: {e}")
+            print(f"Error in agent decision for {self.name}: {e}")
             # Fallback: rest if low energy, otherwise work assembly
+            fallback_reasoning = f"LLM error ({type(e).__name__}), using fallback"
             if self.state.energy < 30:
-                return {"action": "rest", "arguments": {}, "reasoning": "Low energy, resting"}
-            return {"action": "work_assembly", "arguments": {"units": 1}, "reasoning": "Default action"}
+                return {"action": "rest", "arguments": {}, "reasoning": fallback_reasoning}
+            return {"action": "work_assembly", "arguments": {"units": 1}, "reasoning": fallback_reasoning}
 
     def execute_action(self, action: str, arguments: Dict, factory_state: FactoryState) -> Dict:
         """Execute the chosen action and update state"""
