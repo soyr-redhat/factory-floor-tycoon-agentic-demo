@@ -79,9 +79,9 @@ function AgentSetup({ onStart, apiUrl }) {
           <div className="bg-gray-900 rounded-lg p-6 mb-6">
             <h3 className="text-xl font-bold mb-3 text-redhat-red">About Agentic AI</h3>
             <p className="text-gray-300 mb-4">
-              This demo showcases <strong>Agentic AI</strong> - one of the four pillars of AI. Unlike traditional
-              AI that simply responds to prompts, agentic AI can autonomously break down complex goals, make decisions,
-              use tools, and adapt to changing conditions.
+              <strong>Agentic AI</strong> goes beyond just answering questions—it takes action. These AI agents
+              can set goals, make decisions, use tools, and adapt to changing conditions without constant human
+              guidance. Watch as they compete to run the most profitable factory floor!
             </p>
             <h4 className="font-bold mb-2">What You'll See:</h4>
             <ul className="list-disc list-inside space-y-1 text-sm text-gray-300 mb-4">
