@@ -279,7 +279,7 @@ function App() {
                 {/* Speed Control */}
                 <div>
                   <label className="block text-sm font-medium mb-2">Speed</label>
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="grid grid-cols-2 gap-2">
                     <button
                       onClick={() => changeSpeed(0.5)}
                       className={`px-3 py-2 rounded transition text-sm ${
@@ -299,16 +299,6 @@ function App() {
                       }`}
                     >
                       1x
-                    </button>
-                    <button
-                      onClick={() => changeSpeed(2.0)}
-                      className={`px-3 py-2 rounded transition text-sm ${
-                        gameSpeed === 2.0
-                          ? 'bg-redhat-red text-white'
-                          : 'bg-gray-700 hover:bg-gray-600'
-                      }`}
-                    >
-                      2x
                     </button>
                   </div>
                 </div>
