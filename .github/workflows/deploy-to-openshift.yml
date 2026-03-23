@@ -89,14 +89,18 @@ jobs:
       - name: Cleanup old builds
         run: |
           echo "Cleaning up old builds (keeping last 3)..."
-          oc delete builds -n ${{ env.NAMESPACE }} \
-            -l buildconfig=factory-backend \
-            --sort-by=.metadata.creationTimestamp \
-            $(oc get builds -n ${{ env.NAMESPACE }} -l buildconfig=factory-backend --sort-by=.metadata.creationTimestamp -o name | head -n -3) \
-            2>/dev/null || echo "No old backend builds to clean"
-          oc delete builds -n ${{ env.NAMESPACE }} \
-            -l buildconfig=factory-frontend \
-            --sort-by=.metadata.creationTimestamp \
-            $(oc get builds -n ${{ env.NAMESPACE }} -l buildconfig=factory-frontend --sort-by=.metadata.creationTimestamp -o name | head -n -3) \
-            2>/dev/null || echo "No old frontend builds to clean"
+          OLD_BACKEND=$(oc get builds -n ${{ env.NAMESPACE }} -l buildconfig=factory-backend --sort-by=.metadata.creationTimestamp -o name | head -n -3)
+          if [ -n "$OLD_BACKEND" ]; then
+            echo "Deleting old backend builds: $OLD_BACKEND"
+            echo "$OLD_BACKEND" | xargs oc delete -n ${{ env.NAMESPACE }}
+          else
+            echo "No old backend builds to clean"
+          fi
+          OLD_FRONTEND=$(oc get builds -n ${{ env.NAMESPACE }} -l buildconfig=factory-frontend --sort-by=.metadata.creationTimestamp -o name | head -n -3)
+          if [ -n "$OLD_FRONTEND" ]; then
+            echo "Deleting old frontend builds: $OLD_FRONTEND"
+            echo "$OLD_FRONTEND" | xargs oc delete -n ${{ env.NAMESPACE }}
+          else
+            echo "No old frontend builds to clean"
+          fi
           echo "Build cleanup complete"
