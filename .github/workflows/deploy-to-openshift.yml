@@ -86,21 +86,24 @@ jobs:
           echo "🚀 Application deployed successfully!"
           echo "URL: https://$(oc get route factory-floor-tycoon -n ${{ env.NAMESPACE }} -o jsonpath='{.spec.host}')"
 
-      - name: Cleanup old builds
+      - name: Cleanup old builds and build pods
         run: |
-          echo "Cleaning up completed builds (keeping only latest)..."
+          echo "Cleaning up completed builds and build pods..."
+
+          # Delete old build objects (keep only latest)
           OLD_BACKEND=$(oc get builds -n ${{ env.NAMESPACE }} -l buildconfig=factory-backend --sort-by=.metadata.creationTimestamp -o name | head -n -1)
           if [ -n "$OLD_BACKEND" ]; then
             echo "Deleting old backend builds: $OLD_BACKEND"
             echo "$OLD_BACKEND" | xargs oc delete -n ${{ env.NAMESPACE }}
-          else
-            echo "No old backend builds to clean"
           fi
+
           OLD_FRONTEND=$(oc get builds -n ${{ env.NAMESPACE }} -l buildconfig=factory-frontend --sort-by=.metadata.creationTimestamp -o name | head -n -1)
           if [ -n "$OLD_FRONTEND" ]; then
             echo "Deleting old frontend builds: $OLD_FRONTEND"
             echo "$OLD_FRONTEND" | xargs oc delete -n ${{ env.NAMESPACE }}
-          else
-            echo "No old frontend builds to clean"
           fi
+
+          # Delete all completed build pods
+          oc delete pods -n ${{ env.NAMESPACE }} --field-selector=status.phase==Succeeded -l openshift.io/build.name 2>/dev/null || echo "No completed build pods to clean"
+
           echo "Build cleanup complete"
