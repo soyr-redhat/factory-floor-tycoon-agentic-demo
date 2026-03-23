@@ -215,7 +215,7 @@ function App() {
             </div>
             <div className="text-right">
               <div className="text-sm text-gray-400">Powered by</div>
-              <div className="text-redhat-red font-bold">Red Hat OpenShift</div>
+              <div className="text-redhat-red font-bold">Red Hat OpenShift AI</div>
             </div>
           </div>
         </div>
