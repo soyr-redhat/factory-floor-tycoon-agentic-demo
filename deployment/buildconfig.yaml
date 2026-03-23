@@ -1,0 +1,51 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: factory-backend
+  namespace: factory-floor-tycoon
+spec:
+  source:
+    type: Git
+    git:
+      uri: https://github.com/your-org/4_pillars_demos.git
+    contextDir: 1_agentic_ai/backend
+  strategy:
+    type: Docker
+    dockerStrategy:
+      dockerfilePath: Containerfile
+  output:
+    to:
+      kind: ImageStreamTag
+      name: factory-backend:latest
+---
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: factory-frontend
+  namespace: factory-floor-tycoon
+spec:
+  source:
+    type: Git
+    git:
+      uri: https://github.com/your-org/4_pillars_demos.git
+    contextDir: 1_agentic_ai/frontend
+  strategy:
+    type: Docker
+    dockerStrategy:
+      dockerfilePath: Containerfile
+  output:
+    to:
+      kind: ImageStreamTag
+      name: factory-frontend:latest
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: factory-backend
+  namespace: factory-floor-tycoon
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: factory-frontend
+  namespace: factory-floor-tycoon

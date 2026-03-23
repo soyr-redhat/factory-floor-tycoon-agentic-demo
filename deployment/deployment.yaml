@@ -1,0 +1,154 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: factory-floor-tycoon
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: factory-backend
+  namespace: factory-floor-tycoon
+  labels:
+    app: factory-backend
+    pillar: agentic-ai
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: factory-backend
+  template:
+    metadata:
+      labels:
+        app: factory-backend
+    spec:
+      containers:
+      - name: backend
+        image: factory-backend:latest
+        ports:
+        - containerPort: 8000
+          name: http
+        env:
+        - name: LLM_API_URL
+          valueFrom:
+            secretKeyRef:
+              name: llm-credentials
+              key: api-url
+        - name: LLM_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: llm-credentials
+              key: api-key
+        - name: MODEL_NAME
+          value: "gpt-3.5-turbo"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: factory-floor-tycoon
+  labels:
+    app: factory-backend
+spec:
+  selector:
+    app: factory-backend
+  ports:
+  - port: 8000
+    targetPort: 8000
+    name: http
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: factory-frontend
+  namespace: factory-floor-tycoon
+  labels:
+    app: factory-frontend
+    pillar: agentic-ai
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: factory-frontend
+  template:
+    metadata:
+      labels:
+        app: factory-frontend
+    spec:
+      containers:
+      - name: frontend
+        image: factory-frontend:latest
+        ports:
+        - containerPort: 8080
+          name: http
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: factory-floor-tycoon
+  labels:
+    app: factory-frontend
+spec:
+  selector:
+    app: factory-frontend
+  ports:
+  - port: 8080
+    targetPort: 8080
+    name: http
+  type: ClusterIP
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: factory-floor-tycoon
+  namespace: factory-floor-tycoon
+  labels:
+    app: factory-frontend
+spec:
+  to:
+    kind: Service
+    name: frontend
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
