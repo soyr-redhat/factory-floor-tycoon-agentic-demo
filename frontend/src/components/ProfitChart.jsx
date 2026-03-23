@@ -18,27 +18,34 @@ function ProfitChart({ profitHistory, agents }) {
     // Scale mouse coordinates from display space to canvas space
     const scaleX = canvas.width / rect.width
     const scaleY = canvas.height / rect.height
-    const x = displayX * scaleX
-    const y = displayY * scaleY
+    const canvasX = displayX * scaleX
+    const canvasY = displayY * scaleY
 
     const width = canvas.width
     const height = canvas.height
     const padding = 40
     const chartWidth = width - padding * 2
 
-    // Calculate which round the mouse is over
-    const maxRound = profitHistory.length
-    const xScale = chartWidth / Math.max(maxRound - 1, 1)
+    // Calculate xScale based on current profitHistory length
+    const xScale = chartWidth / Math.max(profitHistory.length - 1, 1)
 
-    // Find the closest data point
-    let closestRound = Math.max(0, Math.min(Math.round((x - padding) / xScale), profitHistory.length - 1))
+    // Find the closest data point by checking actual positions
+    let closestRound = -1
+    let closestDistance = Infinity
 
-    // Snap to the actual data point position for better accuracy
-    const actualX = padding + closestRound * xScale
-    const distance = Math.abs(x - actualX)
+    for (let round = 0; round < profitHistory.length; round++) {
+      // Calculate actual x position of this data point
+      const pointX = padding + round * xScale
+      const distance = Math.abs(canvasX - pointX)
 
-    // Only show tooltip if mouse is reasonably close to a data point (within 20px)
-    if (distance < 20 && closestRound >= 0 && closestRound < profitHistory.length) {
+      if (distance < closestDistance) {
+        closestDistance = distance
+        closestRound = round
+      }
+    }
+
+    // Only show tooltip if mouse is reasonably close to a data point (within 30px in canvas space)
+    if (closestDistance < 30 && closestRound >= 0) {
       const snapshot = profitHistory[closestRound]
 
       setTooltip({
