@@ -59,11 +59,25 @@ class FactorySimulation:
 
     def add_periodic_orders(self):
         """Add new orders periodically"""
-        if self.round_num % 5 == 0:
+        # Every 3 rounds: regular orders
+        if self.round_num % 3 == 0:
             new_orders = random.randint(2, 5)
-            # Each agent gets their own orders
             for agent in self.agents:
                 agent.state.pending_orders += new_orders
+
+        # Every 10 rounds: bonus batch of orders
+        if self.round_num % 10 == 0:
+            bonus_orders = 10
+            for agent in self.agents:
+                agent.state.pending_orders += bonus_orders
+            # Log this as an event
+            event = FactoryEvent(
+                type=EventType.RUSH_ORDER,
+                description=f"Large order batch! +{bonus_orders} orders",
+                timestamp=self.state.game_time,
+                severity=2
+            )
+            self.state.events.append(event)
 
     async def run_round(self) -> Dict:
         """Run one round of the simulation"""
