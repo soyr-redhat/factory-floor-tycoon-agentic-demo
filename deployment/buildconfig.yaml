@@ -43,6 +43,9 @@ spec:
     type: Docker
     dockerStrategy:
       dockerfilePath: Containerfile
+      buildArgs:
+      - name: VITE_API_URL
+        value: https://factory-backend-factory-floor-tycoon.apps.ocp.cloud.rhai-tmm.dev
   output:
     to:
       kind: ImageStreamTag
