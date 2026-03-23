@@ -5,6 +5,8 @@ import Leaderboard from './components/Leaderboard'
 import EventLog from './components/EventLog'
 import ProfitChart from './components/ProfitChart'
 import Toast from './components/Toast'
+import LeaderboardSubmit from './components/LeaderboardSubmit'
+import GlobalLeaderboard from './components/GlobalLeaderboard'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
@@ -311,16 +313,36 @@ function App() {
         )}
 
         {gameState === 'finished' && (
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-gray-800 rounded-lg p-8 text-center">
-              <h2 className="text-4xl font-bold text-redhat-red mb-6">Game Over!</h2>
-              <Leaderboard leaderboard={leaderboard} showDetails />
-              <button
-                onClick={resetGame}
-                className="mt-8 bg-redhat-red text-white px-8 py-3 rounded-lg hover:bg-red-700 transition"
-              >
-                Play Again
-              </button>
+          <div className="max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Final Results */}
+              <div>
+                <div className="bg-gray-800 rounded-lg p-8 text-center mb-6">
+                  <h2 className="text-4xl font-bold text-redhat-red mb-6">Game Over!</h2>
+                  <Leaderboard leaderboard={leaderboard} showDetails />
+                  <button
+                    onClick={resetGame}
+                    className="mt-8 bg-redhat-red text-white px-8 py-3 rounded-lg hover:bg-red-700 transition"
+                  >
+                    Play Again
+                  </button>
+                </div>
+
+                {/* Submit to Leaderboard */}
+                <LeaderboardSubmit
+                  leaderboard={leaderboard}
+                  agents={agents}
+                  apiUrl={API_URL}
+                  onSubmitComplete={() => {
+                    // Could refresh global leaderboard here
+                  }}
+                />
+              </div>
+
+              {/* Global Leaderboard */}
+              <div>
+                <GlobalLeaderboard apiUrl={API_URL} />
+              </div>
             </div>
           </div>
         )}

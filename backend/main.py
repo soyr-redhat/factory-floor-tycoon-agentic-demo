@@ -3,7 +3,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Dict
 import asyncio
 import json
-from models import AgentConfig, GameConfig
+import os
+from datetime import datetime
+from pathlib import Path
+from models import AgentConfig, GameConfig, LeaderboardEntry
 from agent import FactoryAgent
 from factory import FactorySimulation
 
@@ -20,6 +23,29 @@ app.add_middleware(
 
 # Store active games
 active_games: Dict[str, FactorySimulation] = {}
+
+# Leaderboard storage (can be mounted to PVC in OpenShift)
+LEADERBOARD_FILE = Path(os.getenv("LEADERBOARD_PATH", "./data/leaderboard.json"))
+LEADERBOARD_FILE.parent.mkdir(parents=True, exist_ok=True)
+
+def load_leaderboard() -> List[Dict]:
+    """Load leaderboard from file"""
+    if not LEADERBOARD_FILE.exists():
+        return []
+    try:
+        with open(LEADERBOARD_FILE, 'r') as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"Error loading leaderboard: {e}")
+        return []
+
+def save_leaderboard(entries: List[Dict]):
+    """Save leaderboard to file"""
+    try:
+        with open(LEADERBOARD_FILE, 'w') as f:
+            json.dump(entries, f, indent=2)
+    except Exception as e:
+        print(f"Error saving leaderboard: {e}")
 
 # Preset agent prompts
 PRESET_PROMPTS = {
@@ -176,6 +202,34 @@ async def get_leaderboard(game_id: str):
 
     simulation = active_games[game_id]
     return {"leaderboard": simulation.get_leaderboard()}
+
+@app.get("/leaderboard")
+async def get_leaderboard(limit: int = 50):
+    """Get top entries from the leaderboard"""
+    entries = load_leaderboard()
+    # Sort by profit descending
+    entries.sort(key=lambda x: x.get('profit', 0), reverse=True)
+    return {"leaderboard": entries[:limit]}
+
+@app.post("/leaderboard")
+async def post_to_leaderboard(entry: LeaderboardEntry):
+    """Submit an agent result to the leaderboard"""
+    entries = load_leaderboard()
+
+    # Add timestamp
+    entry_dict = entry.model_dump()
+    entry_dict['timestamp'] = datetime.utcnow().isoformat()
+
+    # Add to leaderboard
+    entries.append(entry_dict)
+
+    # Keep only top 1000 entries to prevent unbounded growth
+    entries.sort(key=lambda x: x.get('profit', 0), reverse=True)
+    entries = entries[:1000]
+
+    save_leaderboard(entries)
+
+    return {"success": True, "rank": entries.index(entry_dict) + 1}
 
 @app.get("/health")
 async def health_check():

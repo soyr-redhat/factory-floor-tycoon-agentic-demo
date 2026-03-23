@@ -37,6 +37,11 @@ spec:
               key: api-key
         - name: MODEL_NAME
           value: "Mistral-Small-24B-W8A8"
+        - name: LEADERBOARD_PATH
+          value: "/data/leaderboard.json"
+        volumeMounts:
+        - name: leaderboard-data
+          mountPath: /data
         resources:
           requests:
             memory: "256Mi"
@@ -56,6 +61,10 @@ spec:
             port: 8000
           initialDelaySeconds: 5
           periodSeconds: 10
+      volumes:
+      - name: leaderboard-data
+        persistentVolumeClaim:
+          claimName: leaderboard-data
 ---
 apiVersion: v1
 kind: Service

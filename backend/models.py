@@ -71,3 +71,12 @@ class GameConfig(BaseModel):
     event_frequency: float = Field(default=0.15, ge=0.0, le=1.0)
     starting_inventory: int = 10
     starting_orders: int = 3
+
+class LeaderboardEntry(BaseModel):
+    agent_name: str
+    user_name: Optional[str] = "Anonymous"
+    profit: float
+    items_shipped: int
+    quality_score: float
+    strategy_preview: str  # First 100 chars of system prompt
+    timestamp: str
