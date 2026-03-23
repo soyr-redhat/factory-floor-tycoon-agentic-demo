@@ -39,7 +39,6 @@ jobs:
           oc create namespace ${{ env.NAMESPACE }} --dry-run=client -o yaml | oc apply -f -
 
       - name: Apply secrets
-        if: ${{ secrets.LLM_API_URL != '' && secrets.LLM_API_KEY != '' }}
         run: |
           cat <<EOF | oc apply -f -
           apiVersion: v1
