@@ -162,10 +162,10 @@ class FactoryAgent:
             return {"valid": True, "action": action, "arguments": arguments}
 
         elif action == "ship_orders":
-            if factory_state.pending_orders < units:
+            if self.state.pending_orders < units:
                 # No orders to ship - should produce instead
                 return {"valid": False, "reason": "No pending orders", "alternative": "work_assembly", "alt_arguments": {"units": 3}}
-            if factory_state.inventory < units:
+            if self.state.inventory < units:
                 # Not enough inventory - produce more
                 return {"valid": False, "reason": "Insufficient inventory", "alternative": "work_assembly", "alt_arguments": {"units": 3}}
             if not factory_state.machine_status["shipping"]:
@@ -182,7 +182,7 @@ class FactoryAgent:
             return {"valid": True, "action": action, "arguments": arguments}
 
         elif action == "package_items":
-            if factory_state.inventory < units:
+            if self.state.inventory < units:
                 return {"valid": False, "reason": "Nothing to package", "alternative": "work_assembly", "alt_arguments": {"units": 3}}
             if not factory_state.machine_status["packaging"]:
                 return {"valid": False, "reason": "Packaging broken", "alternative": "repair_machine", "alt_arguments": {"machine": "packaging"}}
@@ -194,7 +194,7 @@ class FactoryAgent:
             machine = arguments.get("machine", "assembly")
             if factory_state.machine_status.get(machine, True):
                 # Machine not broken - do something else
-                if factory_state.inventory > 0 and factory_state.pending_orders > 0:
+                if self.state.inventory > 0 and self.state.pending_orders > 0:
                     return {"valid": False, "reason": "Machine not broken", "alternative": "ship_orders", "alt_arguments": {"units": 1}}
                 else:
                     return {"valid": False, "reason": "Machine not broken", "alternative": "work_assembly", "alt_arguments": {"units": 3}}
@@ -238,8 +238,8 @@ Current Factory Status:
 - Your Quality Score: {self.state.quality_score:.1f}%
 - Items Produced: {self.state.items_produced}
 - Items Shipped: {self.state.items_shipped}
-- Factory Inventory: {factory_state.inventory} items
-- Pending Orders: {factory_state.pending_orders} orders waiting
+- Your Inventory: {self.state.inventory} items
+- Your Pending Orders: {self.state.pending_orders} orders waiting
 
 CRITICAL: SHIPPING ORDERS IS THE ONLY WAY TO MAKE PROFIT!
 Workflow: Produce → (Optional: Quality Check) → Package → SHIP ORDERS
@@ -321,8 +321,8 @@ Recent Events:
                     }
 
                 # PRIORITY 2: Ship if we have inventory and orders (MAKE PROFIT!)
-                if factory_state.inventory >= 1 and factory_state.pending_orders >= 1 and self.state.energy >= 4:
-                    units_to_ship = min(5, factory_state.pending_orders, factory_state.inventory)
+                if self.state.inventory >= 1 and self.state.pending_orders >= 1 and self.state.energy >= 4:
+                    units_to_ship = min(5, self.state.pending_orders, self.state.inventory)
                     # Check if we have enough energy to ship
                     if self.state.energy >= units_to_ship * 4:
                         return {
@@ -375,7 +375,7 @@ Recent Events:
         result = {"success": True, "message": ""}
 
         if action == "check_inventory":
-            result["message"] = f"Inventory: {factory_state.inventory}, Orders: {factory_state.pending_orders}"
+            result["message"] = f"Inventory: {self.state.inventory}, Orders: {self.state.pending_orders}"
 
         elif action == "work_assembly":
             units = arguments.get("units", 1)
@@ -390,7 +390,7 @@ Recent Events:
             else:
                 self.state.energy -= energy_needed
                 self.state.items_produced += units
-                factory_state.inventory += units
+                self.state.inventory += units
                 result["message"] = f"Produced {units} units"
 
         elif action == "quality_check":
@@ -413,7 +413,7 @@ Recent Events:
             if not factory_state.machine_status["packaging"]:
                 result["success"] = False
                 result["message"] = "Packaging machine is broken!"
-            elif factory_state.inventory < units:
+            elif self.state.inventory < units:
                 result["success"] = False
                 result["message"] = "Not enough inventory!"
             elif self.state.energy < energy_needed:
@@ -430,10 +430,10 @@ Recent Events:
             if not factory_state.machine_status["shipping"]:
                 result["success"] = False
                 result["message"] = "Shipping machine is broken!"
-            elif factory_state.pending_orders < units:
+            elif self.state.pending_orders < units:
                 result["success"] = False
                 result["message"] = "Not enough pending orders!"
-            elif factory_state.inventory < units:
+            elif self.state.inventory < units:
                 result["success"] = False
                 result["message"] = "Not enough inventory!"
             elif self.state.energy < energy_needed:
@@ -441,8 +441,8 @@ Recent Events:
                 result["message"] = "Not enough energy!"
             else:
                 self.state.energy -= energy_needed
-                factory_state.inventory -= units
-                factory_state.pending_orders -= units
+                self.state.inventory -= units
+                self.state.pending_orders -= units
                 self.state.items_shipped += units
                 # Profit depends on quality score
                 profit_per_unit = 10 * (self.state.quality_score / 100)

@@ -49,6 +49,8 @@ class AgentState(BaseModel):
     thinking: str = ""
     powerups: Dict[str, int] = {}  # powerup_name -> uses remaining
     energy_cost_multiplier: float = 1.0  # Modified by upgrades
+    inventory: int = 10  # Each agent has their own inventory
+    pending_orders: int = 3  # Each agent has their own orders
 
 class FactoryState(BaseModel):
     agents: List[AgentState]

@@ -61,7 +61,9 @@ class FactorySimulation:
         """Add new orders periodically"""
         if self.round_num % 5 == 0:
             new_orders = random.randint(2, 5)
-            self.state.pending_orders += new_orders
+            # Each agent gets their own orders
+            for agent in self.agents:
+                agent.state.pending_orders += new_orders
 
     async def run_round(self) -> Dict:
         """Run one round of the simulation"""

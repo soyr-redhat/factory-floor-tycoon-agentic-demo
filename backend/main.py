@@ -54,7 +54,7 @@ async def root():
     return {
         "service": "Factory Floor Tycoon",
         "status": "running",
-        "pillar": "Agentic AI"
+        "demo_type": "Agentic AI"
     }
 
 @app.get("/presets")

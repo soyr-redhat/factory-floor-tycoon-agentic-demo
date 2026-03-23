@@ -20,7 +20,7 @@ function EventLog({ events, actions }) {
       <h3 className="text-xl font-bold mb-4">Activity Log</h3>
       <div
         ref={logRef}
-        className="bg-gray-900 rounded p-4 h-64 overflow-y-auto font-mono text-sm space-y-2"
+        className="bg-gray-900 rounded p-4 h-96 overflow-y-auto font-mono text-sm space-y-2"
       >
         {combined.length === 0 && (
           <div className="text-gray-500 text-center py-8">

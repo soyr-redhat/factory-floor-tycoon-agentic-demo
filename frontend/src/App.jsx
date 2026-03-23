@@ -4,6 +4,7 @@ import FactoryFloor from './components/FactoryFloor'
 import Leaderboard from './components/Leaderboard'
 import EventLog from './components/EventLog'
 import ProfitChart from './components/ProfitChart'
+import Toast from './components/Toast'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
@@ -32,6 +33,8 @@ function App() {
   const [isPaused, setIsPaused] = useState(false)
   const [gameSpeed, setGameSpeed] = useState(1.0)
   const [ws, setWs] = useState(null)
+  const [toasts, setToasts] = useState([])
+  const [recentEvents, setRecentEvents] = useState([])
 
   // Rotate tips while loading
   useEffect(() => {
@@ -44,6 +47,13 @@ function App() {
   }, [gameState, factoryState])
 
   const startGame = async (selectedAgents) => {
+    // Clear any previous game state
+    setToasts([])
+    setRecentEvents([])
+    setProfitHistory([])
+    setEvents([])
+    setActions([])
+
     try {
       const response = await fetch(`${API_URL}/game/start`, {
         method: 'POST',
@@ -86,8 +96,20 @@ function App() {
         setRoundData(message.data)
         setFactoryState(message.data.state)
 
-        if (message.data.events) {
+        if (message.data.events && message.data.events.length > 0) {
           setEvents(prev => [...prev, ...message.data.events])
+
+          // Show toasts for new events
+          message.data.events.forEach(event => {
+            const toastId = Date.now() + Math.random()
+            setToasts(prev => [...prev, { id: toastId, message: event.description }])
+          })
+
+          // Track recent events (keep last 3)
+          setRecentEvents(prev => {
+            const updated = [...prev, ...message.data.events]
+            return updated.slice(-3)
+          })
         }
 
         if (message.data.actions) {
@@ -145,6 +167,10 @@ function App() {
     }))
   }
 
+  const closeToast = (id) => {
+    setToasts(prev => prev.filter(toast => toast.id !== id))
+  }
+
   const resetGame = () => {
     if (ws) {
       ws.close()
@@ -160,17 +186,30 @@ function App() {
     setProfitHistory([])
     setIsPaused(false)
     setGameSpeed(1.0)
+    setToasts([])
+    setRecentEvents([])
   }
 
   return (
-    <div className="min-h-screen bg-redhat-dark text-white">
+    <div className="min-h-screen bg-redhat-dark text-white flex flex-col">
+      {/* Toast Notifications */}
+      <div className="fixed top-4 right-4 z-50 space-y-2">
+        {toasts.map(toast => (
+          <Toast
+            key={toast.id}
+            message={toast.message}
+            onClose={() => closeToast(toast.id)}
+          />
+        ))}
+      </div>
+
       {/* Header */}
-      <header className="bg-black border-b border-redhat-red">
+      <header className="bg-black">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-redhat-red">Factory Floor Tycoon</h1>
-              <p className="text-gray-400 mt-1">Agentic AI Demo - Four Pillars of AI</p>
+              <p className="text-gray-400 mt-1">Agentic AI Demo</p>
             </div>
             <div className="text-right">
               <div className="text-sm text-gray-400">Powered by</div>
@@ -181,7 +220,7 @@ function App() {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 flex-grow">
         {gameState === 'setup' && (
           <AgentSetup onStart={startGame} apiUrl={API_URL} />
         )}
@@ -212,6 +251,7 @@ function App() {
                 state={factoryState}
                 agents={agents}
                 roundData={roundData}
+                recentEvents={recentEvents}
               />
               <EventLog events={events} actions={actions} />
             </div>
@@ -274,25 +314,6 @@ function App() {
                 </div>
               </div>
 
-              {/* Game Info */}
-              <div className="bg-gray-800 rounded-lg p-6">
-                <h3 className="text-xl font-bold mb-4">Game Status</h3>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Round:</span>
-                    <span className="font-mono">{roundData?.round || 0} / 50</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Inventory:</span>
-                    <span className="font-mono">{factoryState.inventory}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Pending Orders:</span>
-                    <span className="font-mono">{factoryState.pending_orders}</span>
-                  </div>
-                </div>
-              </div>
-
               {/* Profit Chart */}
               <ProfitChart profitHistory={profitHistory} agents={agents} />
             </div>
@@ -315,12 +336,6 @@ function App() {
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="bg-black border-t border-gray-800 mt-12 py-6">
-        <div className="container mx-auto px-4 text-center text-gray-400 text-sm">
-          <p>Built with open source technologies | Red Hat AI - Four Pillars Demo</p>
-        </div>
-      </footer>
     </div>
   )
 }
