@@ -1,0 +1,88 @@
+name: Deploy to OpenShift
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+      - 'frontend/**'
+      - 'deployment/**'
+      - '.github/workflows/deploy-to-openshift.yml'
+
+env:
+  NAMESPACE: factory-floor-tycoon
+  OCP_SERVER: https://api.ocp.cloud.rhai-tmm.dev:6443
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Build and Deploy to OpenShift
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install OpenShift CLI
+        run: |
+          curl -LO https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz
+          tar -xzf openshift-client-linux.tar.gz
+          sudo mv oc /usr/local/bin/
+          oc version --client
+
+      - name: Login to OpenShift
+        run: |
+          oc login --token=${{ secrets.OPENSHIFT_LOGIN_TOKEN }} --server=${{ env.OCP_SERVER }} --insecure-skip-tls-verify=true
+
+      - name: Create namespace if not exists
+        run: |
+          oc create namespace ${{ env.NAMESPACE }} --dry-run=client -o yaml | oc apply -f -
+
+      - name: Apply secrets
+        if: ${{ secrets.LLM_API_URL != '' && secrets.LLM_API_KEY != '' }}
+        run: |
+          cat <<EOF | oc apply -f -
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: llm-credentials
+            namespace: ${{ env.NAMESPACE }}
+          type: Opaque
+          stringData:
+            api-url: "${{ secrets.LLM_API_URL }}"
+            api-key: "${{ secrets.LLM_API_KEY }}"
+          EOF
+
+      - name: Apply BuildConfig and ImageStreams
+        run: |
+          oc apply -f deployment/buildconfig.yaml -n ${{ env.NAMESPACE }}
+
+      - name: Trigger builds
+        run: |
+          oc start-build factory-backend -n ${{ env.NAMESPACE }} &
+          oc start-build factory-frontend -n ${{ env.NAMESPACE }} &
+          wait
+
+      - name: Wait for builds to complete
+        run: |
+          oc wait --for=condition=Complete --timeout=10m build -l buildconfig=factory-backend -n ${{ env.NAMESPACE }}
+          oc wait --for=condition=Complete --timeout=10m build -l buildconfig=factory-frontend -n ${{ env.NAMESPACE }}
+
+      - name: Apply deployment manifests
+        run: |
+          oc apply -f deployment/deployment.yaml -n ${{ env.NAMESPACE }}
+
+      - name: Trigger deployment rollout
+        run: |
+          oc rollout latest dc/factory-backend -n ${{ env.NAMESPACE }} 2>/dev/null || oc rollout restart deployment/factory-backend -n ${{ env.NAMESPACE }}
+          oc rollout latest dc/factory-frontend -n ${{ env.NAMESPACE }} 2>/dev/null || oc rollout restart deployment/factory-frontend -n ${{ env.NAMESPACE }}
+
+      - name: Wait for deployments to be ready
+        run: |
+          oc rollout status deployment/factory-backend -n ${{ env.NAMESPACE }} --timeout=5m
+          oc rollout status deployment/factory-frontend -n ${{ env.NAMESPACE }} --timeout=5m
+
+      - name: Get application URL
+        run: |
+          echo "🚀 Application deployed successfully!"
+          echo "URL: https://$(oc get route factory-floor-tycoon -n ${{ env.NAMESPACE }} -o jsonpath='{.spec.host}')"

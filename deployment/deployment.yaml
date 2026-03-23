@@ -11,6 +11,8 @@ metadata:
   labels:
     app: factory-backend
     pillar: agentic-ai
+  annotations:
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"factory-backend:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"backend\")].image"}]'
 spec:
   replicas: 1
   selector:
@@ -23,7 +25,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: factory-backend:latest
+        image: image-registry.openshift-image-registry.svc:5000/factory-floor-tycoon/factory-backend:latest
         ports:
         - containerPort: 8000
           name: http
@@ -39,7 +41,7 @@ spec:
               name: llm-credentials
               key: api-key
         - name: MODEL_NAME
-          value: "gpt-3.5-turbo"
+          value: "Mistral-Small-24B-W8A8"
         resources:
           requests:
             memory: "256Mi"
@@ -84,6 +86,8 @@ metadata:
   labels:
     app: factory-frontend
     pillar: agentic-ai
+  annotations:
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"factory-frontend:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"frontend\")].image"}]'
 spec:
   replicas: 2
   selector:
@@ -96,7 +100,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: factory-frontend:latest
+        image: image-registry.openshift-image-registry.svc:5000/factory-floor-tycoon/factory-frontend:latest
         ports:
         - containerPort: 8080
           name: http

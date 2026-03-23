@@ -4,11 +4,16 @@ metadata:
   name: factory-backend
   namespace: factory-floor-tycoon
 spec:
+  triggers:
+  - type: ConfigChange
+  - type: GitHub
+    github:
+      secret: github-webhook-secret
   source:
     type: Git
     git:
-      uri: https://github.com/your-org/4_pillars_demos.git
-    contextDir: 1_agentic_ai/backend
+      uri: https://github.com/soyr-redhat/factory-floor-tycoon-agentic-demo.git
+    contextDir: backend
   strategy:
     type: Docker
     dockerStrategy:
@@ -24,11 +29,16 @@ metadata:
   name: factory-frontend
   namespace: factory-floor-tycoon
 spec:
+  triggers:
+  - type: ConfigChange
+  - type: GitHub
+    github:
+      secret: github-webhook-secret
   source:
     type: Git
     git:
-      uri: https://github.com/your-org/4_pillars_demos.git
-    contextDir: 1_agentic_ai/frontend
+      uri: https://github.com/soyr-redhat/factory-floor-tycoon-agentic-demo.git
+    contextDir: frontend
   strategy:
     type: Docker
     dockerStrategy:
