@@ -138,6 +138,23 @@ spec:
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
+  name: factory-backend
+  namespace: factory-floor-tycoon
+  labels:
+    app: factory-backend
+spec:
+  to:
+    kind: Service
+    name: backend
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
   name: factory-floor-tycoon
   namespace: factory-floor-tycoon
   labels:
