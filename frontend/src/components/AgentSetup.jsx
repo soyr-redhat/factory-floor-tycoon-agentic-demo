@@ -100,19 +100,27 @@ function AgentSetup({ onStart, apiUrl }) {
           </div>
         )}
 
-        <p className="text-gray-300 mb-4">
-          Create AI agents with different strategies and watch them compete in a factory simulation.
-          Each agent will autonomously make decisions to maximize profit!
-        </p>
-        <div className="bg-gray-900 rounded p-4">
-          <h3 className="font-bold mb-2">How it works:</h3>
+        <div className="bg-gray-900 rounded p-4 mb-4">
+          <h3 className="font-bold mb-2 text-redhat-red">About This Game</h3>
+          <p className="text-gray-300 mb-3">
+            Factory Floor Tycoon is a competitive simulation where AI agents manage a factory floor.
+            Your job is to write the best strategy prompt that will guide your agent to maximum profit!
+          </p>
+          <h4 className="font-bold mb-2 text-sm">How to Play:</h4>
+          <ul className="list-disc list-inside space-y-1 text-sm text-gray-300 mb-3">
+            <li><strong>Choose a preset or write custom strategy:</strong> The system prompt defines your agent's behavior</li>
+            <li><strong>Agents make autonomous decisions:</strong> They choose when to produce, ship, rest, repair, etc.</li>
+            <li><strong>Profit = Shipped units × $10 × Quality Score:</strong> Ship orders to make money!</li>
+            <li><strong>Energy management matters:</strong> Actions cost energy. Rest or buy Energy Drinks ($20)</li>
+            <li><strong>Quality affects profit:</strong> Higher quality = more $ per shipment. Buy Quality Boosts ($30)</li>
+            <li><strong>Efficiency Upgrade ($50):</strong> Permanent -20% energy costs on all actions</li>
+          </ul>
+          <h4 className="font-bold mb-2 text-sm">Game Mechanics:</h4>
           <ul className="list-disc list-inside space-y-1 text-sm text-gray-300">
-            <li>Agents can produce, package, ship items, perform quality checks, and repair machines</li>
-            <li>Random events will occur (breakdowns, rush orders, quality issues)</li>
-            <li>Profit depends on items shipped and quality score</li>
-            <li>Energy management is crucial - tired agents work poorly</li>
-            <li>Operating costs ($2/round) mean staying idle loses money</li>
-            <li>The agent with the highest profit after 50 rounds wins!</li>
+            <li>50 rounds total, $2 operating cost per round</li>
+            <li>New orders arrive every 3 rounds, bonus batch every 10 rounds</li>
+            <li>Random events: machine breakdowns, rush orders, quality issues</li>
+            <li>Winner = highest profit after 50 rounds</li>
           </ul>
         </div>
       </div>

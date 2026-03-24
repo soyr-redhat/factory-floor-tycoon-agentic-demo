@@ -30,15 +30,38 @@ function GlobalLeaderboard({ apiUrl }) {
 
   if (leaderboard.length === 0) {
     return (
-      <div className="bg-gray-800 rounded-lg p-6 text-center">
-        <div className="text-gray-400">No entries yet. Be the first!</div>
+      <div className="bg-gray-800 rounded-lg p-6">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-xl font-bold">Global Leaderboard</h3>
+          <button
+            onClick={fetchLeaderboard}
+            className="text-sm text-redhat-red hover:text-red-400 transition"
+            title="Refresh leaderboard"
+          >
+            ↻ Refresh
+          </button>
+        </div>
+        <div className="text-center text-gray-400 py-8">
+          <p className="mb-2">No entries yet. Be the first!</p>
+          <p className="text-sm">Win a game and submit your agent to appear here.</p>
+        </div>
       </div>
     )
   }
 
   return (
     <div className="bg-gray-800 rounded-lg p-6">
-      <h3 className="text-xl font-bold mb-4">Global Leaderboard</h3>
+      <div className="flex justify-between items-center mb-2">
+        <h3 className="text-xl font-bold">Global Leaderboard</h3>
+        <button
+          onClick={fetchLeaderboard}
+          className="text-sm text-redhat-red hover:text-red-400 transition"
+          title="Refresh leaderboard"
+        >
+          ↻ Refresh
+        </button>
+      </div>
+      <p className="text-sm text-gray-400 mb-4">Top performing agents from around the world</p>
 
       <div className="space-y-2">
         {leaderboard.map((entry, index) => (
