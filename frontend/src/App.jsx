@@ -181,8 +181,10 @@ function App() {
     try {
       for (const entry of finalLeaderboard) {
         const agentConfig = agents.find(a => a.name === entry.name)
-        // Use user's agent name if they provided one, otherwise generate random name
-        const agentName = entry.name && entry.name.trim() ? entry.name : generateRandomName()
+        // Use user's agent name if they customized it, otherwise generate random name
+        // Check if it's a default name like "Agent 1", "Agent 2", etc.
+        const isDefaultName = /^Agent \d+$/i.test(entry.name)
+        const agentName = isDefaultName ? generateRandomName() : entry.name
 
         const submission = {
           agent_name: agentName,
@@ -219,8 +221,10 @@ function App() {
     try {
       for (const entry of leaderboard) {
         const agentConfig = agents.find(a => a.name === entry.name)
-        // Use user's agent name if they provided one, otherwise generate random name
-        const agentName = entry.name && entry.name.trim() ? entry.name : generateRandomName()
+        // Use user's agent name if they customized it, otherwise generate random name
+        // Check if it's a default name like "Agent 1", "Agent 2", etc.
+        const isDefaultName = /^Agent \d+$/i.test(entry.name)
+        const agentName = isDefaultName ? generateRandomName() : entry.name
 
         const submission = {
           agent_name: agentName,
