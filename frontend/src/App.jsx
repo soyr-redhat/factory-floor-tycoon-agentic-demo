@@ -5,8 +5,7 @@ import Leaderboard from './components/Leaderboard'
 import EventLog from './components/EventLog'
 import ProfitChart from './components/ProfitChart'
 import Toast from './components/Toast'
-import LeaderboardSubmit from './components/LeaderboardSubmit'
-import GlobalLeaderboard from './components/GlobalLeaderboard'
+import { generateRandomName } from './utils/nameGenerator'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
@@ -37,6 +36,9 @@ function App() {
   const [ws, setWs] = useState(null)
   const [toasts, setToasts] = useState([])
   const [recentEvents, setRecentEvents] = useState([])
+  const [leaderboardSubmitted, setLeaderboardSubmitted] = useState(false)
+  const [userName, setUserName] = useState('')
+  const [showUserNamePrompt, setShowUserNamePrompt] = useState(false)
 
   // Rotate tips while loading
   useEffect(() => {
@@ -135,6 +137,8 @@ function App() {
       } else if (message.type === 'game_over') {
         setGameState('finished')
         setLeaderboard(message.leaderboard)
+        // Auto-submit to leaderboard
+        autoSubmitToLeaderboard(message.leaderboard)
       }
     }
 
@@ -173,6 +177,73 @@ function App() {
     setToasts(prev => prev.filter(toast => toast.id !== id))
   }
 
+  const autoSubmitToLeaderboard = async (finalLeaderboard) => {
+    try {
+      for (const entry of finalLeaderboard) {
+        const agentConfig = agents.find(a => a.name === entry.name)
+        const randomAgentName = generateRandomName()
+
+        const submission = {
+          agent_name: randomAgentName,
+          user_name: 'Anonymous',
+          profit: entry.profit,
+          items_shipped: entry.items_shipped,
+          quality_score: entry.quality_score,
+          strategy_preview: agentConfig?.system_prompt?.substring(0, 100) || 'Custom strategy',
+          timestamp: new Date().toISOString()
+        }
+
+        await fetch(`${API_URL}/leaderboard`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(submission)
+        })
+      }
+
+      setLeaderboardSubmitted(true)
+      setShowUserNamePrompt(true)
+    } catch (error) {
+      console.error('Failed to auto-submit to leaderboard:', error)
+    }
+  }
+
+  const updateLeaderboardWithRealName = async () => {
+    // This would require storing submission IDs and updating them
+    // For simplicity, just resubmit with real name
+    if (!userName.trim()) {
+      setShowUserNamePrompt(false)
+      return
+    }
+
+    try {
+      for (const entry of leaderboard) {
+        const agentConfig = agents.find(a => a.name === entry.name)
+        const randomAgentName = generateRandomName()
+
+        const submission = {
+          agent_name: randomAgentName,
+          user_name: userName.trim(),
+          profit: entry.profit,
+          items_shipped: entry.items_shipped,
+          quality_score: entry.quality_score,
+          strategy_preview: agentConfig?.system_prompt?.substring(0, 100) || 'Custom strategy',
+          timestamp: new Date().toISOString()
+        }
+
+        await fetch(`${API_URL}/leaderboard`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(submission)
+        })
+      }
+
+      setShowUserNamePrompt(false)
+      alert('Leaderboard updated with your name!')
+    } catch (error) {
+      console.error('Failed to update leaderboard:', error)
+    }
+  }
+
   const resetGame = () => {
     if (ws) {
       ws.close()
@@ -190,6 +261,9 @@ function App() {
     setGameSpeed(1.0)
     setToasts([])
     setRecentEvents([])
+    setLeaderboardSubmitted(false)
+    setShowUserNamePrompt(false)
+    setUserName('')
   }
 
   return (
@@ -313,36 +387,54 @@ function App() {
         )}
 
         {gameState === 'finished' && (
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Final Results */}
-              <div>
-                <div className="bg-gray-800 rounded-lg p-8 text-center mb-6">
-                  <h2 className="text-4xl font-bold text-redhat-red mb-6">Game Over!</h2>
-                  <Leaderboard leaderboard={leaderboard} showDetails />
-                  <button
-                    onClick={resetGame}
-                    className="mt-8 bg-redhat-red text-white px-8 py-3 rounded-lg hover:bg-red-700 transition"
-                  >
-                    Play Again
-                  </button>
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-gray-800 rounded-lg p-8 text-center">
+              <h2 className="text-4xl font-bold text-redhat-red mb-6">Game Over!</h2>
+              <Leaderboard leaderboard={leaderboard} showDetails />
+
+              {leaderboardSubmitted && (
+                <div className="mt-6 p-4 bg-green-900 bg-opacity-30 rounded-lg border border-green-700">
+                  <p className="text-green-400 font-semibold">✓ Results submitted to global leaderboard!</p>
                 </div>
+              )}
 
-                {/* Submit to Leaderboard */}
-                <LeaderboardSubmit
-                  leaderboard={leaderboard}
-                  agents={agents}
-                  apiUrl={API_URL}
-                  onSubmitComplete={() => {
-                    // Could refresh global leaderboard here
-                  }}
-                />
-              </div>
+              {showUserNamePrompt && (
+                <div className="mt-6 p-6 bg-gray-900 rounded-lg">
+                  <h3 className="text-lg font-bold mb-3">Claim Your Agents (Optional)</h3>
+                  <p className="text-gray-400 text-sm mb-4">
+                    Your results were submitted anonymously. Want to add your name?
+                  </p>
+                  <div className="flex gap-3 max-w-md mx-auto">
+                    <input
+                      type="text"
+                      value={userName}
+                      onChange={(e) => setUserName(e.target.value)}
+                      className="flex-grow bg-gray-800 text-white px-4 py-2 rounded"
+                      placeholder="Your name (optional)"
+                      maxLength={30}
+                    />
+                    <button
+                      onClick={updateLeaderboardWithRealName}
+                      className="bg-redhat-red text-white px-6 py-2 rounded hover:bg-red-700 transition"
+                    >
+                      Claim
+                    </button>
+                    <button
+                      onClick={() => setShowUserNamePrompt(false)}
+                      className="bg-gray-700 text-white px-6 py-2 rounded hover:bg-gray-600 transition"
+                    >
+                      Skip
+                    </button>
+                  </div>
+                </div>
+              )}
 
-              {/* Global Leaderboard */}
-              <div>
-                <GlobalLeaderboard apiUrl={API_URL} />
-              </div>
+              <button
+                onClick={resetGame}
+                className="mt-8 bg-redhat-red text-white px-8 py-3 rounded-lg hover:bg-red-700 transition"
+              >
+                Play Again
+              </button>
             </div>
           </div>
         )}
