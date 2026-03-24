@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import GlobalLeaderboard from './GlobalLeaderboard'
 
 const AGENT_COLORS = ['#EE0000', '#FFA500', '#4169E1', '#32CD32', '#9370DB']
 
@@ -7,7 +8,7 @@ function AgentSetup({ onStart, apiUrl }) {
   const [agents, setAgents] = useState([
     { name: 'Agent 1', system_prompt: '', color: AGENT_COLORS[0], preset: '' }
   ])
-  const [showAbout, setShowAbout] = useState(false)
+  const [activeTab, setActiveTab] = useState('about')
 
   useEffect(() => {
     fetch(`${apiUrl}/presets`)
@@ -64,139 +65,213 @@ function AgentSetup({ onStart, apiUrl }) {
 
   return (
     <div className="max-w-6xl mx-auto">
-      <div className="bg-gray-800 rounded-lg p-8 mb-6">
-        <div className="flex justify-between items-start mb-4">
-          <h2 className="text-2xl font-bold">Welcome to Factory Floor Tycoon!</h2>
+      {/* Tab Navigation */}
+      <div className="bg-gray-800 rounded-t-lg overflow-hidden">
+        <div className="flex border-b border-gray-700">
           <button
-            onClick={() => setShowAbout(!showAbout)}
-            className="text-redhat-red hover:text-red-400 transition text-sm font-medium"
+            onClick={() => setActiveTab('about')}
+            className={`flex-1 px-6 py-4 text-lg font-semibold transition ${
+              activeTab === 'about'
+                ? 'bg-gray-900 text-redhat-red border-b-2 border-redhat-red'
+                : 'text-gray-400 hover:text-white hover:bg-gray-750'
+            }`}
           >
-            {showAbout ? 'Hide About' : 'About This Demo'}
+            About
+          </button>
+          <button
+            onClick={() => setActiveTab('setup')}
+            className={`flex-1 px-6 py-4 text-lg font-semibold transition ${
+              activeTab === 'setup'
+                ? 'bg-gray-900 text-redhat-red border-b-2 border-redhat-red'
+                : 'text-gray-400 hover:text-white hover:bg-gray-750'
+            }`}
+          >
+            Setup Agents
+          </button>
+          <button
+            onClick={() => setActiveTab('leaderboard')}
+            className={`flex-1 px-6 py-4 text-lg font-semibold transition ${
+              activeTab === 'leaderboard'
+                ? 'bg-gray-900 text-redhat-red border-b-2 border-redhat-red'
+                : 'text-gray-400 hover:text-white hover:bg-gray-750'
+            }`}
+          >
+            Leaderboard
           </button>
         </div>
+      </div>
 
-        {showAbout && (
-          <div className="bg-gray-900 rounded-lg p-6 mb-6">
-            <h3 className="text-xl font-bold mb-3 text-redhat-red">About Agentic AI</h3>
-            <p className="text-gray-300 mb-4">
-              <strong>Agentic AI</strong> is a form of artificial intelligence that can take autonomous action
-              to achieve goals. These AI agents can make decisions, use tools, and adapt to changing conditions
-              without constant human guidance. Watch as they compete to run the most profitable factory floor!
-            </p>
-            <h4 className="font-bold mb-2">What You'll See:</h4>
-            <ul className="list-disc list-inside space-y-1 text-sm text-gray-300 mb-4">
-              <li><strong>Tool Use:</strong> Agents decide when to produce, inspect, package, ship, or repair</li>
-              <li><strong>Reasoning:</strong> Watch agents explain their decisions in real-time</li>
-              <li><strong>Adaptation:</strong> Agents respond to events like machine breakdowns and rush orders</li>
-              <li><strong>Competition:</strong> Multiple agents with different strategies compete for profit</li>
-            </ul>
-            <h4 className="font-bold mb-2">Key Concepts:</h4>
-            <ul className="list-disc list-inside space-y-1 text-sm text-gray-300">
-              <li><strong>System Prompts:</strong> Define agent behavior and strategy</li>
-              <li><strong>Function Calling:</strong> Agents choose which tools to use autonomously</li>
-              <li><strong>State Management:</strong> Agents track energy, quality, and profit</li>
-              <li><strong>Operating Costs:</strong> $2/round + energy decay forces active decision-making</li>
-            </ul>
+      {/* Tab Content */}
+      <div className="bg-gray-800 rounded-b-lg p-8">
+        {/* About Tab */}
+        {activeTab === 'about' && (
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold mb-6 text-center">Welcome to Factory Floor Tycoon!</h2>
+
+            <div className="bg-gray-900 rounded-lg p-6 mb-6">
+              <h3 className="text-xl font-bold mb-3 text-redhat-red">About Agentic AI</h3>
+              <p className="text-gray-300 mb-4">
+                <strong>Agentic AI</strong> is a form of artificial intelligence that can take autonomous action
+                to achieve goals. These AI agents can make decisions, use tools, and adapt to changing conditions
+                without constant human guidance. Watch as they compete to run the most profitable factory floor!
+              </p>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="font-bold mb-2">What You'll See:</h4>
+                  <ul className="list-disc list-inside space-y-1 text-sm text-gray-300">
+                    <li><strong>Tool Use:</strong> Agents decide when to produce, inspect, package, ship, or repair</li>
+                    <li><strong>Reasoning:</strong> Watch agents explain their decisions in real-time</li>
+                    <li><strong>Adaptation:</strong> Agents respond to events like machine breakdowns and rush orders</li>
+                    <li><strong>Competition:</strong> Multiple agents with different strategies compete for profit</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-bold mb-2">Key Concepts:</h4>
+                  <ul className="list-disc list-inside space-y-1 text-sm text-gray-300">
+                    <li><strong>System Prompts:</strong> Define agent behavior and strategy</li>
+                    <li><strong>Function Calling:</strong> Agents choose which tools to use autonomously</li>
+                    <li><strong>State Management:</strong> Agents track energy, quality, and profit</li>
+                    <li><strong>Operating Costs:</strong> $2/round + energy decay forces active decision-making</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gray-900 rounded-lg p-6 mb-8">
+              <h3 className="font-bold mb-3 text-redhat-red text-xl">How to Play</h3>
+              <p className="text-gray-300 mb-4">
+                Factory Floor Tycoon is a competitive simulation where AI agents manage a factory floor.
+                Your job is to write the best strategy prompt that will guide your agent to maximum profit!
+              </p>
+
+              <div className="grid md:grid-cols-2 gap-6 mb-4">
+                <div>
+                  <h4 className="font-bold mb-2 text-sm">Gameplay:</h4>
+                  <ul className="list-disc list-inside space-y-1 text-sm text-gray-300">
+                    <li><strong>Choose a preset or write custom strategy</strong></li>
+                    <li><strong>Agents make autonomous decisions</strong></li>
+                    <li><strong>Profit = Shipped units × $10 × Quality Score</strong></li>
+                    <li><strong>Energy management matters</strong></li>
+                    <li><strong>Quality affects profit per shipment</strong></li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-bold mb-2 text-sm">Powerups:</h4>
+                  <ul className="list-disc list-inside space-y-1 text-sm text-gray-300">
+                    <li><strong>Energy Drink ($20):</strong> Restore +50 energy</li>
+                    <li><strong>Quality Boost ($30):</strong> Add +20% quality</li>
+                    <li><strong>Efficiency Upgrade ($50):</strong> -20% energy costs permanently</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="bg-gray-800 rounded p-4">
+                <h4 className="font-bold mb-2 text-sm">Game Mechanics:</h4>
+                <ul className="list-disc list-inside space-y-1 text-sm text-gray-300">
+                  <li>50 rounds total, $2 operating cost per round</li>
+                  <li>New orders arrive every 3 rounds, bonus batch every 10 rounds</li>
+                  <li>Random events: machine breakdowns, rush orders, quality issues</li>
+                  <li>Winner = highest profit after 50 rounds</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="text-center">
+              <button
+                onClick={() => setActiveTab('setup')}
+                className="bg-redhat-red text-white px-12 py-4 rounded-lg text-xl font-bold hover:bg-red-700 transition"
+              >
+                Play Now →
+              </button>
+            </div>
           </div>
         )}
 
-        <div className="bg-gray-900 rounded p-4 mb-4">
-          <h3 className="font-bold mb-2 text-redhat-red">About This Game</h3>
-          <p className="text-gray-300 mb-3">
-            Factory Floor Tycoon is a competitive simulation where AI agents manage a factory floor.
-            Your job is to write the best strategy prompt that will guide your agent to maximum profit!
-          </p>
-          <h4 className="font-bold mb-2 text-sm">How to Play:</h4>
-          <ul className="list-disc list-inside space-y-1 text-sm text-gray-300 mb-3">
-            <li><strong>Choose a preset or write custom strategy:</strong> The system prompt defines your agent's behavior</li>
-            <li><strong>Agents make autonomous decisions:</strong> They choose when to produce, ship, rest, repair, etc.</li>
-            <li><strong>Profit = Shipped units × $10 × Quality Score:</strong> Ship orders to make money!</li>
-            <li><strong>Energy management matters:</strong> Actions cost energy. Rest or buy Energy Drinks ($20)</li>
-            <li><strong>Quality affects profit:</strong> Higher quality = more $ per shipment. Buy Quality Boosts ($30)</li>
-            <li><strong>Efficiency Upgrade ($50):</strong> Permanent -20% energy costs on all actions</li>
-          </ul>
-          <h4 className="font-bold mb-2 text-sm">Game Mechanics:</h4>
-          <ul className="list-disc list-inside space-y-1 text-sm text-gray-300">
-            <li>50 rounds total, $2 operating cost per round</li>
-            <li>New orders arrive every 3 rounds, bonus batch every 10 rounds</li>
-            <li>Random events: machine breakdowns, rush orders, quality issues</li>
-            <li>Winner = highest profit after 50 rounds</li>
-          </ul>
-        </div>
-      </div>
-
-      <div className="space-y-4">
-        <div className="flex justify-between items-center">
-          <h3 className="text-xl font-bold">Configure Your Agents</h3>
-          <button
-            onClick={addAgent}
-            disabled={agents.length >= 5}
-            className="bg-redhat-red text-white px-4 py-2 rounded hover:bg-red-700 transition disabled:bg-gray-600 disabled:cursor-not-allowed"
-          >
-            + Add Agent
-          </button>
-        </div>
-
-        {agents.map((agent, index) => (
-          <div key={index} className="bg-gray-800 rounded-lg p-6">
-            <div className="flex justify-between items-start mb-4">
-              <div className="flex items-center gap-3">
-                <div
-                  className="w-8 h-8 rounded-full"
-                  style={{ backgroundColor: agent.color }}
-                />
-                <input
-                  type="text"
-                  value={agent.name}
-                  onChange={(e) => updateAgent(index, 'name', e.target.value)}
-                  className="bg-gray-900 text-white px-3 py-2 rounded text-lg font-bold"
-                  placeholder="Agent Name"
-                />
-              </div>
-              {agents.length > 1 && (
-                <button
-                  onClick={() => removeAgent(index)}
-                  className="text-red-400 hover:text-red-300"
-                >
-                  Remove
-                </button>
-              )}
-            </div>
-
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">Strategy Preset</label>
-              <select
-                value={agent.preset}
-                onChange={(e) => updateAgent(index, 'preset', e.target.value)}
-                className="w-full bg-gray-900 text-white px-3 py-2 rounded"
+        {/* Setup Tab */}
+        {activeTab === 'setup' && (
+          <div>
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-2xl font-bold">Configure Your Agents</h3>
+              <button
+                onClick={addAgent}
+                disabled={agents.length >= 5}
+                className="bg-redhat-red text-white px-4 py-2 rounded hover:bg-red-700 transition disabled:bg-gray-600 disabled:cursor-not-allowed"
               >
-                <option value="">Custom</option>
-                {Object.entries(presets).map(([key, preset]) => (
-                  <option key={key} value={key}>{preset.name}</option>
-                ))}
-              </select>
+                + Add Agent
+              </button>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">System Prompt</label>
-              <textarea
-                value={agent.system_prompt}
-                onChange={(e) => updateAgent(index, 'system_prompt', e.target.value)}
-                className="w-full bg-gray-900 text-white px-3 py-2 rounded h-32 font-mono text-sm"
-                placeholder="Enter the strategy for this agent..."
-              />
+            <div className="space-y-4 mb-8">
+              {agents.map((agent, index) => (
+                <div key={index} className="bg-gray-900 rounded-lg p-6">
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="flex items-center gap-3">
+                      <div
+                        className="w-8 h-8 rounded-full"
+                        style={{ backgroundColor: agent.color }}
+                      />
+                      <input
+                        type="text"
+                        value={agent.name}
+                        onChange={(e) => updateAgent(index, 'name', e.target.value)}
+                        className="bg-gray-800 text-white px-3 py-2 rounded text-lg font-bold"
+                        placeholder="Agent Name"
+                      />
+                    </div>
+                    {agents.length > 1 && (
+                      <button
+                        onClick={() => removeAgent(index)}
+                        className="text-red-400 hover:text-red-300"
+                      >
+                        Remove
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium mb-2">Strategy Preset</label>
+                    <select
+                      value={agent.preset}
+                      onChange={(e) => updateAgent(index, 'preset', e.target.value)}
+                      className="w-full bg-gray-800 text-white px-3 py-2 rounded"
+                    >
+                      <option value="">Custom</option>
+                      {Object.entries(presets).map(([key, preset]) => (
+                        <option key={key} value={key}>{preset.name}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">System Prompt</label>
+                    <textarea
+                      value={agent.system_prompt}
+                      onChange={(e) => updateAgent(index, 'system_prompt', e.target.value)}
+                      className="w-full bg-gray-800 text-white px-3 py-2 rounded h-32 font-mono text-sm"
+                      placeholder="Enter the strategy for this agent..."
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="text-center">
+              <button
+                onClick={handleStart}
+                className="bg-redhat-red text-white px-12 py-4 rounded-lg text-xl font-bold hover:bg-red-700 transition"
+              >
+                Start Game
+              </button>
             </div>
           </div>
-        ))}
-      </div>
+        )}
 
-      <div className="mt-8 text-center">
-        <button
-          onClick={handleStart}
-          className="bg-redhat-red text-white px-12 py-4 rounded-lg text-xl font-bold hover:bg-red-700 transition"
-        >
-          Start Game
-        </button>
+        {/* Leaderboard Tab */}
+        {activeTab === 'leaderboard' && (
+          <div className="max-w-4xl mx-auto">
+            <GlobalLeaderboard apiUrl={apiUrl} />
+          </div>
+        )}
       </div>
     </div>
   )

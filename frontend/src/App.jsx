@@ -224,14 +224,7 @@ function App() {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8 flex-grow">
         {gameState === 'setup' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2">
-              <AgentSetup onStart={startGame} apiUrl={API_URL} />
-            </div>
-            <div>
-              <GlobalLeaderboard apiUrl={API_URL} />
-            </div>
-          </div>
+          <AgentSetup onStart={startGame} apiUrl={API_URL} />
         )}
 
         {gameState === 'running' && !factoryState && (
