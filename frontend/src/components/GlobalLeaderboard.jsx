@@ -63,35 +63,40 @@ function GlobalLeaderboard({ apiUrl }) {
       </div>
       <p className="text-sm text-gray-400 mb-4">Top performing agents from around the world</p>
 
-      <div className="space-y-2">
+      <div className="space-y-2 overflow-hidden">
         {leaderboard.map((entry, index) => (
           <div
             key={index}
-            className={`flex items-center gap-4 p-3 rounded ${
+            className={`flex items-start gap-2 p-3 rounded ${
               index < 3 ? 'bg-yellow-900 bg-opacity-20' : 'bg-gray-900'
             }`}
           >
-            <div className="w-8 text-center font-bold text-lg">
+            <div className="w-6 text-center font-bold text-sm flex-shrink-0">
               {index === 0 && '🥇'}
               {index === 1 && '🥈'}
               {index === 2 && '🥉'}
               {index > 2 && <span className="text-gray-500">{index + 1}</span>}
             </div>
 
-            <div className="flex-grow">
-              <div className="flex items-center gap-2">
-                <span className="font-bold">{entry.agent_name}</span>
-                <span className="text-sm text-gray-400">by {entry.user_name}</span>
+            <div className="flex-grow min-w-0">
+              <div className="flex items-center gap-1 mb-1">
+                <span className="font-bold text-sm truncate">{entry.agent_name}</span>
               </div>
-              <div className="text-sm text-gray-400 truncate">
-                {entry.strategy_preview}...
+              <div className="text-xs text-gray-400 truncate">
+                by {entry.user_name}
+              </div>
+              <div className="text-xs text-gray-500 truncate mt-1">
+                {entry.strategy_preview?.substring(0, 40)}...
               </div>
             </div>
 
-            <div className="text-right">
-              <div className="font-bold text-green-400">${entry.profit.toFixed(2)}</div>
-              <div className="text-xs text-gray-400">
-                {entry.items_shipped} shipped • {entry.quality_score.toFixed(0)}% quality
+            <div className="text-right flex-shrink-0">
+              <div className="font-bold text-green-400 text-sm">${entry.profit.toFixed(2)}</div>
+              <div className="text-xs text-gray-400 whitespace-nowrap">
+                {entry.items_shipped} ship
+              </div>
+              <div className="text-xs text-gray-400 whitespace-nowrap">
+                {entry.quality_score.toFixed(0)}% qual
               </div>
             </div>
           </div>
