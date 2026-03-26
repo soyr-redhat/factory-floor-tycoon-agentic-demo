@@ -10,6 +10,8 @@ metadata:
     image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"factory-backend:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"backend\")].image"}]'
 spec:
   replicas: 1
+  strategy:
+    type: Recreate  # Use Recreate instead of RollingUpdate for PVC compatibility
   selector:
     matchLabels:
       app: factory-backend
