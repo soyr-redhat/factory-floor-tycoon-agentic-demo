@@ -110,10 +110,17 @@ class FactorySimulation:
         self.add_periodic_orders()
 
         # Each agent decides and executes an action
-        for agent in self.agents:
+        # Run decisions in parallel to speed up rounds
+        async def process_agent(agent):
             try:
-                # Agent decides what to do
-                decision = agent.decide_action(self.state, self.state.events[-5:])
+                print(f"[Round {self.round_num}] {agent.name} deciding...")
+                # Agent decides what to do (synchronous LLM call)
+                decision = await asyncio.to_thread(
+                    agent.decide_action,
+                    self.state,
+                    self.state.events[-5:]
+                )
+                print(f"[Round {self.round_num}] {agent.name} decided: {decision['action']}")
 
                 # Execute the action
                 result = agent.execute_action(
@@ -140,32 +147,36 @@ class FactorySimulation:
                     "package_items": "packaging",
                     "ship_orders": "shipping",
                     "repair_machine": "repair",
-                    "check_inventory": "inventory",
-                    "rest": "assembly"  # Default to assembly for rest
+                    "rest": "assembly",
+                    "buy_powerup": "powerup"
                 }
-                action_type = action_map.get(decision["action"], decision["action"])
 
                 # Log the action (skip model validation, just log to actions list)
-                round_data["actions"].append({
+                return {
                     "agent": agent.name,
                     "action": decision["action"],
                     "reasoning": decision.get("reasoning", ""),
                     "result": result["message"],
                     "success": result["success"]
-                })
-
-                # Small delay to prevent rate limiting
-                await asyncio.sleep(0.1)
+                }
 
             except Exception as e:
-                print(f"Error in agent {agent.name}: {e}")
-                round_data["actions"].append({
+                import traceback
+                print(f"ERROR in agent {agent.name}: {e}")
+                print(traceback.format_exc())
+                return {
                     "agent": agent.name,
                     "action": "error",
                     "reasoning": str(e),
-                    "result": "Action failed",
+                    "result": f"Action failed: {type(e).__name__}",
                     "success": False
-                })
+                }
+
+        # Process all agents in parallel
+        print(f"[Round {self.round_num}] Starting parallel agent decisions...")
+        agent_results = await asyncio.gather(*[process_agent(agent) for agent in self.agents])
+        round_data["actions"].extend(agent_results)
+        print(f"[Round {self.round_num}] All agents completed")
 
         # Update state
         self.state.agents = [agent.state for agent in self.agents]

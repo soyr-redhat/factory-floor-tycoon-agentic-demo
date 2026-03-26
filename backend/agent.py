@@ -20,25 +20,14 @@ class FactoryAgent:
         self.client = OpenAI(
             api_key=os.getenv("LLM_API_KEY", ""),
             base_url=os.getenv("LLM_API_URL", "https://api.openai.com/v1"),
-            timeout=30.0  # 30 second timeout to prevent hanging
+            timeout=60.0,  # 60 second timeout
+            max_retries=2
         )
         self.model = os.getenv("MODEL_NAME", "gpt-3.5-turbo")
 
     def get_available_tools(self) -> List[Dict]:
         """Define tools the agent can use"""
         return [
-            {
-                "type": "function",
-                "function": {
-                    "name": "check_inventory",
-                    "description": "Check current inventory levels and pending orders. Use this sparingly as it provides no profit.",
-                    "parameters": {
-                        "type": "object",
-                        "properties": {},
-                        "required": []
-                    }
-                }
-            },
             {
                 "type": "function",
                 "function": {
@@ -156,7 +145,21 @@ class FactoryAgent:
         energy_needed = energy_costs.get(action, 0)
 
         # Validate by action type
-        if action == "work_assembly":
+        if action == "buy_powerup":
+            powerup = arguments.get("powerup", "energy_drink")
+            powerup_costs = {"quality_boost": 30, "energy_drink": 20, "efficiency_upgrade": 50}
+            cost = powerup_costs.get(powerup, 0)
+
+            if self.state.profit < cost:
+                return {"valid": False, "reason": f"Can't afford ${cost}", "alternative": "work_assembly", "alt_arguments": {"units": 3}}
+
+            # Don't buy efficiency upgrade if already have it
+            if powerup == "efficiency_upgrade" and self.state.energy_cost_multiplier < 1.0:
+                return {"valid": False, "reason": "Already have efficiency upgrade", "alternative": "work_assembly", "alt_arguments": {"units": 3}}
+
+            return {"valid": True, "action": action, "arguments": arguments}
+
+        elif action == "work_assembly":
             if not factory_state.machine_status["assembly"]:
                 return {"valid": False, "reason": "Assembly broken", "alternative": "repair_machine", "alt_arguments": {"machine": "assembly"}}
             if self.state.energy < energy_needed:
@@ -208,24 +211,6 @@ class FactoryAgent:
             # Always valid
             return {"valid": True, "action": action, "arguments": arguments}
 
-        elif action == "check_inventory":
-            # Always valid but maybe not the best use of time
-            return {"valid": True, "action": action, "arguments": arguments}
-
-        elif action == "buy_powerup":
-            powerup = arguments.get("powerup", "energy_drink")
-            powerup_costs = {"quality_boost": 30, "energy_drink": 20, "efficiency_upgrade": 50}
-            cost = powerup_costs.get(powerup, 0)
-
-            if self.state.profit < cost:
-                return {"valid": False, "reason": f"Can't afford ${cost}", "alternative": "work_assembly", "alt_arguments": {"units": 3}}
-
-            # Don't buy efficiency upgrade if already have it
-            if powerup == "efficiency_upgrade" and self.state.energy_cost_multiplier < 1.0:
-                return {"valid": False, "reason": "Already have efficiency upgrade", "alternative": "work_assembly", "alt_arguments": {"units": 3}}
-
-            return {"valid": True, "action": action, "arguments": arguments}
-
         # Unknown action
         return {"valid": False, "reason": "Unknown action", "alternative": "rest", "alt_arguments": {}}
 
@@ -242,10 +227,16 @@ Current Factory Status:
 - Items Shipped: {self.state.items_shipped}
 - Your Inventory: {self.state.inventory} items
 - Your Pending Orders: {self.state.pending_orders} orders waiting
+- Energy Cost Multiplier: {self.state.energy_cost_multiplier:.1f}x {'✓ EFFICIENCY UPGRADE ACTIVE' if self.state.energy_cost_multiplier < 1.0 else '(Buy efficiency_upgrade for 0.8x!)'}
 
 CRITICAL: SHIPPING ORDERS IS THE ONLY WAY TO MAKE PROFIT!
-Workflow: Produce → (Optional: Quality Check) → Package → SHIP ORDERS
-If inventory > 0 AND pending_orders > 0, you should SHIP to make money!
+Workflow: Produce → Package → SHIP ORDERS (Quality checks are optional)
+Profit per unit shipped: $10 × (quality_score/100)
+
+Available Powerups:
+- efficiency_upgrade ($50): Permanent 0.8x energy costs on ALL actions - HUGE value!
+- energy_drink ($20): +50 energy instantly
+- quality_boost ($30): +20% quality score
 
 Machine Status:
 - Assembly: {'✓' if factory_state.machine_status['assembly'] else '✗ BROKEN'}
@@ -335,17 +326,22 @@ Recent Events:
                 print(f"WARNING: {self.name} - No tool call found in response")
                 print(f"  LLM Response: {reasoning[:200]}...")
 
-                # Default to a safe action
+                # Default to a safe action - rest
                 return {
-                    "action": "check_inventory",
+                    "action": "rest",
                     "arguments": {},
-                    "reasoning": reasoning or "No tool call made"
+                    "reasoning": reasoning or "No tool call made - defaulting to rest"
                 }
 
         except Exception as e:
-            print(f"Error in agent decision for {self.name}: {e}")
+            import traceback
+            print(f"ERROR in agent decision for {self.name}: {e}")
+            print(f"Error type: {type(e).__name__}")
+            print(f"Traceback: {traceback.format_exc()}")
+
             # Fallback: rest if low energy, otherwise work assembly
-            fallback_reasoning = f"LLM error ({type(e).__name__}), using fallback"
+            fallback_reasoning = f"LLM error ({type(e).__name__}: {str(e)}), using fallback"
+            self.state.thinking = fallback_reasoning
             if self.state.energy < 30:
                 return {"action": "rest", "arguments": {}, "reasoning": fallback_reasoning}
             return {"action": "work_assembly", "arguments": {"units": 1}, "reasoning": fallback_reasoning}
@@ -354,10 +350,7 @@ Recent Events:
         """Execute the chosen action and update state"""
         result = {"success": True, "message": ""}
 
-        if action == "check_inventory":
-            result["message"] = f"Inventory: {self.state.inventory}, Orders: {self.state.pending_orders}"
-
-        elif action == "work_assembly":
+        if action == "work_assembly":
             units = arguments.get("units", 1)
             energy_needed = int(units * 5 * self.state.energy_cost_multiplier)
             print(f"DEBUG {self.name}: work_assembly - units={units}, energy_needed={energy_needed}, current_energy={self.state.energy}")

@@ -169,7 +169,14 @@ async def websocket_endpoint(websocket: WebSocket, game_id: str):
                 continue
 
             # Run one round
+            print(f"=== Starting Round {simulation.round_num + 1}/{simulation.config.num_rounds} ===")
+            import time
+            round_start = time.time()
+
             round_data = await simulation.run_round()
+
+            round_elapsed = time.time() - round_start
+            print(f"=== Round {simulation.round_num} completed in {round_elapsed:.2f}s ===")
 
             # Send update to client
             await websocket.send_json({
@@ -192,12 +199,20 @@ async def websocket_endpoint(websocket: WebSocket, game_id: str):
     except WebSocketDisconnect:
         print(f"Client disconnected from game {game_id}")
     except Exception as e:
-        print(f"Error in WebSocket: {e}")
-        await websocket.send_json({"error": str(e)})
+        import traceback
+        print(f"Error in WebSocket for game {game_id}: {e}")
+        print(traceback.format_exc())
+        # Try to send error, but don't crash if websocket already closed
+        try:
+            await websocket.send_json({"type": "error", "error": str(e)})
+        except:
+            pass  # Websocket already closed
     finally:
         # Clean up
+        control_task.cancel()  # Cancel the control message listener
         if game_id in active_games:
             del active_games[game_id]
+            print(f"Cleaned up game {game_id}")
 
 @app.get("/game/{game_id}/leaderboard")
 async def get_leaderboard(game_id: str):
