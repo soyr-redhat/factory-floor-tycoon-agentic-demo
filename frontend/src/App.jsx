@@ -276,7 +276,6 @@ function App() {
     <div className="min-h-screen bg-redhat-dark-bg text-white flex flex-col">
       {/* Red Hat Brand Visual Elements */}
       <div className="grid-background"></div>
-      <div className="scan-line"></div>
 
       {/* Toast Notifications */}
       <div className="fixed top-4 right-4 z-50 space-y-2">
@@ -347,7 +346,7 @@ function App() {
               <Leaderboard leaderboard={leaderboard} />
 
               {/* Game Controls */}
-              <div className="bg-gray-800 rounded-lg p-6">
+              <div className="bg-redhat-dark-surface rounded-lg p-6">
                 <h3 className="text-xl font-bold mb-4">Game Controls</h3>
 
                 {/* Pause/Resume */}
@@ -371,7 +370,7 @@ function App() {
                       className={`px-3 py-2 rounded transition text-sm ${
                         gameSpeed === 0.5
                           ? 'bg-redhat-red text-white'
-                          : 'bg-gray-700 hover:bg-gray-600'
+                          : 'bg-redhat-dark-surface/80 hover:bg-redhat-red/20'
                       }`}
                     >
                       0.5x
@@ -381,7 +380,7 @@ function App() {
                       className={`px-3 py-2 rounded transition text-sm ${
                         gameSpeed === 1.0
                           ? 'bg-redhat-red text-white'
-                          : 'bg-gray-700 hover:bg-gray-600'
+                          : 'bg-redhat-dark-surface/80 hover:bg-redhat-red/20'
                       }`}
                     >
                       1x
@@ -398,7 +397,7 @@ function App() {
 
         {gameState === 'finished' && (
           <div className="max-w-4xl mx-auto">
-            <div className="bg-gray-800 rounded-lg p-8 text-center">
+            <div className="bg-redhat-dark-surface rounded-lg p-8 text-center">
               <h2 className="text-4xl font-bold text-redhat-red mb-6">Game Over!</h2>
               <Leaderboard leaderboard={leaderboard} showDetails />
 
@@ -409,7 +408,7 @@ function App() {
               )}
 
               {showUserNamePrompt && (
-                <div className="mt-6 p-6 bg-gray-900 rounded-lg">
+                <div className="mt-6 p-6 bg-redhat-dark-elevated rounded-lg">
                   <h3 className="text-lg font-bold mb-3">Claim Your Agents (Optional)</h3>
                   <p className="text-gray-400 text-sm mb-4">
                     Your results were submitted anonymously. Want to add your name?
@@ -419,7 +418,7 @@ function App() {
                       type="text"
                       value={userName}
                       onChange={(e) => setUserName(e.target.value)}
-                      className="flex-grow bg-gray-800 text-white px-4 py-2 rounded"
+                      className="flex-grow bg-redhat-dark-surface text-white px-4 py-2 rounded"
                       placeholder="Your name (optional)"
                       maxLength={30}
                     />
@@ -431,7 +430,7 @@ function App() {
                     </button>
                     <button
                       onClick={() => setShowUserNamePrompt(false)}
-                      className="bg-gray-700 text-white px-6 py-2 rounded hover:bg-gray-600 transition"
+                      className="bg-redhat-dark-surface/80 text-white px-6 py-2 rounded hover:bg-redhat-red/20 transition"
                     >
                       Skip
                     </button>

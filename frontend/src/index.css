@@ -87,21 +87,4 @@ code {
   background: radial-gradient(circle at 50% 0%, rgba(238, 0, 0, 0.03), transparent 70%);
 }
 
-/* Scan line effect */
-@keyframes scan {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(100vh); }
-}
-
-.scan-line {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #EE0000, transparent);
-  opacity: 0.3;
-  animation: scan 8s linear infinite;
-  pointer-events: none;
-  z-index: 999;
-}
+/* Removed scan line for demo apps - kept only in landing page */

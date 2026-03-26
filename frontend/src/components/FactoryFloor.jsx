@@ -10,7 +10,7 @@ function FactoryFloor({ state, agents, roundData, recentEvents = [] }) {
   }
 
   return (
-    <div className="bg-gray-800 rounded-lg p-6">
+    <div className="bg-redhat-dark-surface rounded-lg p-6">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold">Factory Floor</h2>
         <div className="text-lg font-mono">
@@ -32,22 +32,22 @@ function FactoryFloor({ state, agents, roundData, recentEvents = [] }) {
 
       {/* Factory Stations */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <div className={`bg-gray-900 rounded-lg p-4 text-center ${getMachineColor('assembly')}`}>
+        <div className={`bg-redhat-dark-elevated rounded-lg p-4 text-center ${getMachineColor('assembly')}`}>
           <div className="text-3xl mb-2">{getMachineStatus('assembly')}</div>
           <div className="font-bold">Assembly</div>
           <div className="text-xs text-gray-400">Produce items</div>
         </div>
-        <div className={`bg-gray-900 rounded-lg p-4 text-center ${getMachineColor('qc')}`}>
+        <div className={`bg-redhat-dark-elevated rounded-lg p-4 text-center ${getMachineColor('qc')}`}>
           <div className="text-3xl mb-2">{getMachineStatus('qc')}</div>
           <div className="font-bold">Quality Control</div>
           <div className="text-xs text-gray-400">Inspect quality</div>
         </div>
-        <div className={`bg-gray-900 rounded-lg p-4 text-center ${getMachineColor('packaging')}`}>
+        <div className={`bg-redhat-dark-elevated rounded-lg p-4 text-center ${getMachineColor('packaging')}`}>
           <div className="text-3xl mb-2">{getMachineStatus('packaging')}</div>
           <div className="font-bold">Packaging</div>
           <div className="text-xs text-gray-400">Package items</div>
         </div>
-        <div className={`bg-gray-900 rounded-lg p-4 text-center ${getMachineColor('shipping')}`}>
+        <div className={`bg-redhat-dark-elevated rounded-lg p-4 text-center ${getMachineColor('shipping')}`}>
           <div className="text-3xl mb-2">{getMachineStatus('shipping')}</div>
           <div className="font-bold">Shipping</div>
           <div className="text-xs text-gray-400">Ship orders</div>
@@ -60,7 +60,7 @@ function FactoryFloor({ state, agents, roundData, recentEvents = [] }) {
         {state.agents.map((agentState, index) => {
           const agentConfig = agents.find(a => a.name === agentState.name)
           return (
-            <div key={index} className="bg-gray-900 rounded-lg p-4">
+            <div key={index} className="bg-redhat-dark-elevated rounded-lg p-4">
               <div className="flex items-start gap-4">
                 {/* Agent Avatar */}
                 <div className="flex-shrink-0">
@@ -96,7 +96,7 @@ function FactoryFloor({ state, agents, roundData, recentEvents = [] }) {
                     <div>
                       <div className="text-gray-400 text-xs">Energy</div>
                       <div className="flex items-center gap-1">
-                        <div className="flex-grow bg-gray-700 rounded-full h-2 overflow-hidden">
+                        <div className="flex-grow bg-redhat-dark-surface/80 rounded-full h-2 overflow-hidden">
                           <div
                             className={`h-full ${
                               agentState.energy > 60 ? 'bg-green-400' :
@@ -142,14 +142,14 @@ function FactoryFloor({ state, agents, roundData, recentEvents = [] }) {
                           ⚡ Efficiency +20%
                         </span>
                       ) : (
-                        <span className="bg-gray-700 text-gray-500 px-2 py-1 rounded text-xs">
+                        <span className="bg-redhat-dark-surface/80 text-gray-500 px-2 py-1 rounded text-xs">
                           ⚡ Efficiency ($50)
                         </span>
                       )}
-                      <span className="bg-gray-700 text-gray-500 px-2 py-1 rounded text-xs">
+                      <span className="bg-redhat-dark-surface/80 text-gray-500 px-2 py-1 rounded text-xs">
                         💊 Energy Drink ($20)
                       </span>
-                      <span className="bg-gray-700 text-gray-500 px-2 py-1 rounded text-xs">
+                      <span className="bg-redhat-dark-surface/80 text-gray-500 px-2 py-1 rounded text-xs">
                         ✨ Quality Boost ($30)
                       </span>
                     </div>

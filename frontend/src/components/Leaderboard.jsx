@@ -7,13 +7,13 @@ function Leaderboard({ leaderboard, showDetails = false }) {
   }
 
   return (
-    <div className="bg-gray-800 rounded-lg p-6">
+    <div className="bg-redhat-dark-surface rounded-lg p-6">
       <h3 className="text-xl font-bold mb-4">Leaderboard</h3>
       <div className="space-y-3">
         {leaderboard.map((agent, index) => (
           <div
             key={agent.name}
-            className={`bg-gray-900 rounded-lg p-4 ${
+            className={`bg-redhat-dark-elevated rounded-lg p-4 ${
               index === 0 ? 'ring-2 ring-yellow-400' : ''
             }`}
           >

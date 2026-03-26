@@ -52,7 +52,7 @@ function EventLog({ events, actions, agents }) {
   }
 
   return (
-    <div className="bg-gray-800 rounded-lg p-6">
+    <div className="bg-redhat-dark-surface rounded-lg p-6">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-xl font-bold">Activity Log</h3>
         {agentNames.length > 1 && (
@@ -70,7 +70,7 @@ function EventLog({ events, actions, agents }) {
             className={`px-3 py-1 rounded text-sm font-medium transition ${
               selectedAgent === 'all'
                 ? 'bg-redhat-red text-white'
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                : 'bg-redhat-dark-surface/80 text-gray-300 hover:bg-redhat-red/20'
             }`}
           >
             All
@@ -81,8 +81,8 @@ function EventLog({ events, actions, agents }) {
               onClick={() => setSelectedAgent(agentName)}
               className={`px-3 py-1 rounded text-sm font-medium transition flex items-center gap-2 ${
                 selectedAgent === agentName
-                  ? 'bg-gray-900 text-white ring-2'
-                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  ? 'bg-redhat-dark-elevated text-white ring-2'
+                  : 'bg-redhat-dark-surface/80 text-gray-300 hover:bg-redhat-red/20'
               }`}
               style={selectedAgent === agentName ? { ringColor: getAgentColor(agentName) } : {}}
             >
@@ -97,7 +97,7 @@ function EventLog({ events, actions, agents }) {
       )}
       <div
         ref={logRef}
-        className="bg-gray-900 rounded p-4 h-96 overflow-y-auto font-mono text-sm space-y-2"
+        className="bg-redhat-dark-elevated rounded p-4 h-96 overflow-y-auto font-mono text-sm space-y-2"
       >
         {combined.length === 0 && (
           <div className="text-gray-500 text-center py-8">

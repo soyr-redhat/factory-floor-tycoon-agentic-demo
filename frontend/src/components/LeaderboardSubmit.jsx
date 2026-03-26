@@ -91,7 +91,7 @@ function LeaderboardSubmit({ leaderboard, agents, apiUrl, onSubmitComplete }) {
 
   if (submitted) {
     return (
-      <div className="bg-gray-800 rounded-lg p-6 text-center">
+      <div className="bg-redhat-dark-surface rounded-lg p-6 text-center">
         <div className="text-green-500 text-xl font-bold mb-2">✓ Submitted to Leaderboard!</div>
         <p className="text-gray-300">Your agents have been added to the global leaderboard.</p>
       </div>
@@ -99,7 +99,7 @@ function LeaderboardSubmit({ leaderboard, agents, apiUrl, onSubmitComplete }) {
   }
 
   return (
-    <div className="bg-gray-800 rounded-lg p-6">
+    <div className="bg-redhat-dark-surface rounded-lg p-6">
       <h3 className="text-xl font-bold mb-4">Submit to Leaderboard</h3>
 
       <div className="mb-4">
@@ -108,7 +108,7 @@ function LeaderboardSubmit({ leaderboard, agents, apiUrl, onSubmitComplete }) {
           type="text"
           value={userName}
           onChange={(e) => setUserName(e.target.value)}
-          className="w-full bg-gray-900 text-white px-3 py-2 rounded"
+          className="w-full bg-redhat-dark-elevated text-white px-3 py-2 rounded"
           placeholder="Anonymous"
           maxLength={30}
         />
@@ -123,8 +123,8 @@ function LeaderboardSubmit({ leaderboard, agents, apiUrl, onSubmitComplete }) {
             return (
               <label
                 key={entry.name}
-                className={`flex items-center gap-3 p-3 bg-gray-900 rounded ${
-                  alreadySubmitted ? 'opacity-50' : 'cursor-pointer hover:bg-gray-700'
+                className={`flex items-center gap-3 p-3 bg-redhat-dark-elevated rounded ${
+                  alreadySubmitted ? 'opacity-50' : 'cursor-pointer hover:bg-redhat-dark-surface/80'
                 } transition`}
               >
                 <input

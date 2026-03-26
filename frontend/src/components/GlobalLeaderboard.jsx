@@ -22,7 +22,7 @@ function GlobalLeaderboard({ apiUrl }) {
 
   if (loading) {
     return (
-      <div className="bg-gray-800 rounded-lg p-6 text-center">
+      <div className="bg-redhat-dark-surface rounded-lg p-6 text-center">
         <div className="text-gray-400">Loading leaderboard...</div>
       </div>
     )
@@ -30,7 +30,7 @@ function GlobalLeaderboard({ apiUrl }) {
 
   if (leaderboard.length === 0) {
     return (
-      <div className="bg-gray-800 rounded-lg p-6">
+      <div className="bg-redhat-dark-surface rounded-lg p-6">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-xl font-bold">Global Leaderboard</h3>
           <button
@@ -50,7 +50,7 @@ function GlobalLeaderboard({ apiUrl }) {
   }
 
   return (
-    <div className="bg-gray-800 rounded-lg p-6">
+    <div className="bg-redhat-dark-surface rounded-lg p-6">
       <div className="flex justify-between items-center mb-2">
         <h3 className="text-xl font-bold">Global Leaderboard</h3>
         <button
@@ -68,7 +68,7 @@ function GlobalLeaderboard({ apiUrl }) {
           <div
             key={index}
             className={`flex items-start gap-2 p-3 rounded ${
-              index < 3 ? 'bg-yellow-900 bg-opacity-20' : 'bg-gray-900'
+              index < 3 ? 'bg-yellow-900 bg-opacity-20' : 'bg-redhat-dark-elevated'
             }`}
           >
             <div className="w-6 text-center font-bold text-sm flex-shrink-0">

@@ -191,7 +191,7 @@ function ProfitChart({ profitHistory, agents }) {
   }, [profitHistory, agents, tooltip])
 
   return (
-    <div className="bg-gray-800 rounded-lg p-4" ref={containerRef}>
+    <div className="bg-redhat-dark-surface rounded-lg p-4" ref={containerRef}>
       <h3 className="text-lg font-bold mb-3">Profit Over Time</h3>
       <div className="relative">
         <canvas

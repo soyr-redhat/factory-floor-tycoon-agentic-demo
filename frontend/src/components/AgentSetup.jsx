@@ -66,14 +66,14 @@ function AgentSetup({ onStart, apiUrl }) {
   return (
     <div className="max-w-6xl mx-auto">
       {/* Tab Navigation */}
-      <div className="bg-gray-800 rounded-t-lg overflow-hidden">
+      <div className="bg-redhat-dark-surface rounded-t-lg overflow-hidden">
         <div className="flex border-b border-gray-700">
           <button
             onClick={() => setActiveTab('about')}
             className={`flex-1 px-6 py-4 text-lg font-semibold transition ${
               activeTab === 'about'
-                ? 'bg-gray-900 text-redhat-red border-b-2 border-redhat-red'
-                : 'text-gray-400 hover:text-white hover:bg-gray-750'
+                ? 'bg-redhat-dark-elevated text-redhat-red border-b-2 border-redhat-red'
+                : 'text-gray-400 hover:text-white hover:bg-redhat-dark-elevated'
             }`}
           >
             About
@@ -82,8 +82,8 @@ function AgentSetup({ onStart, apiUrl }) {
             onClick={() => setActiveTab('setup')}
             className={`flex-1 px-6 py-4 text-lg font-semibold transition ${
               activeTab === 'setup'
-                ? 'bg-gray-900 text-redhat-red border-b-2 border-redhat-red'
-                : 'text-gray-400 hover:text-white hover:bg-gray-750'
+                ? 'bg-redhat-dark-elevated text-redhat-red border-b-2 border-redhat-red'
+                : 'text-gray-400 hover:text-white hover:bg-redhat-dark-elevated'
             }`}
           >
             Setup Agents
@@ -92,8 +92,8 @@ function AgentSetup({ onStart, apiUrl }) {
             onClick={() => setActiveTab('leaderboard')}
             className={`flex-1 px-6 py-4 text-lg font-semibold transition ${
               activeTab === 'leaderboard'
-                ? 'bg-gray-900 text-redhat-red border-b-2 border-redhat-red'
-                : 'text-gray-400 hover:text-white hover:bg-gray-750'
+                ? 'bg-redhat-dark-elevated text-redhat-red border-b-2 border-redhat-red'
+                : 'text-gray-400 hover:text-white hover:bg-redhat-dark-elevated'
             }`}
           >
             Leaderboard
@@ -102,13 +102,13 @@ function AgentSetup({ onStart, apiUrl }) {
       </div>
 
       {/* Tab Content */}
-      <div className="bg-gray-800 rounded-b-lg p-8">
+      <div className="bg-redhat-dark-surface rounded-b-lg p-8">
         {/* About Tab */}
         {activeTab === 'about' && (
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl font-bold mb-6 text-center">Welcome to Factory Floor Tycoon!</h2>
 
-            <div className="bg-gray-900 rounded-lg p-6 mb-6">
+            <div className="bg-redhat-dark-elevated rounded-lg p-6 mb-6">
               <h3 className="text-xl font-bold mb-3 text-redhat-red">About Agentic AI</h3>
               <p className="text-gray-300 mb-4">
                 <strong>Agentic AI</strong> is a form of artificial intelligence that can take autonomous action
@@ -137,7 +137,7 @@ function AgentSetup({ onStart, apiUrl }) {
               </div>
             </div>
 
-            <div className="bg-gray-900 rounded-lg p-6 mb-8">
+            <div className="bg-redhat-dark-elevated rounded-lg p-6 mb-8">
               <h3 className="font-bold mb-3 text-redhat-red text-xl">How to Play</h3>
               <p className="text-gray-300 mb-4">
                 Factory Floor Tycoon is a competitive simulation where AI agents manage a factory floor.
@@ -165,7 +165,7 @@ function AgentSetup({ onStart, apiUrl }) {
                 </div>
               </div>
 
-              <div className="bg-gray-800 rounded p-4">
+              <div className="bg-redhat-dark-surface rounded p-4">
                 <h4 className="font-bold mb-2 text-sm">Game Mechanics:</h4>
                 <ul className="list-disc list-inside space-y-1 text-sm text-gray-300">
                   <li>50 rounds total, $2 operating cost per round</li>
@@ -203,7 +203,7 @@ function AgentSetup({ onStart, apiUrl }) {
 
             <div className="space-y-4 mb-8">
               {agents.map((agent, index) => (
-                <div key={index} className="bg-gray-900 rounded-lg p-6">
+                <div key={index} className="bg-redhat-dark-elevated rounded-lg p-6">
                   <div className="flex justify-between items-start mb-4">
                     <div className="flex items-center gap-3">
                       <div
@@ -214,7 +214,7 @@ function AgentSetup({ onStart, apiUrl }) {
                         type="text"
                         value={agent.name}
                         onChange={(e) => updateAgent(index, 'name', e.target.value)}
-                        className="bg-gray-800 text-white px-3 py-2 rounded text-lg font-bold"
+                        className="bg-redhat-dark-surface text-white px-3 py-2 rounded text-lg font-bold"
                         placeholder="Agent Name"
                       />
                     </div>
@@ -233,7 +233,7 @@ function AgentSetup({ onStart, apiUrl }) {
                     <select
                       value={agent.preset}
                       onChange={(e) => updateAgent(index, 'preset', e.target.value)}
-                      className="w-full bg-gray-800 text-white px-3 py-2 rounded"
+                      className="w-full bg-redhat-dark-surface text-white px-3 py-2 rounded"
                     >
                       <option value="">Custom</option>
                       {Object.entries(presets).map(([key, preset]) => (
@@ -247,7 +247,7 @@ function AgentSetup({ onStart, apiUrl }) {
                     <textarea
                       value={agent.system_prompt}
                       onChange={(e) => updateAgent(index, 'system_prompt', e.target.value)}
-                      className="w-full bg-gray-800 text-white px-3 py-2 rounded h-32 font-mono text-sm"
+                      className="w-full bg-redhat-dark-surface text-white px-3 py-2 rounded h-32 font-mono text-sm"
                       placeholder="Enter the strategy for this agent..."
                     />
                   </div>
