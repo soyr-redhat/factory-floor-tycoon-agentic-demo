@@ -1,3 +1,8 @@
+"""
+Factory Floor Tycoon - Agentic AI Demo Backend
+Version: 1.1.0
+Last Updated: 2026-03-26
+"""
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Dict
@@ -10,7 +15,7 @@ from models import AgentConfig, GameConfig, LeaderboardEntry
 from agent import FactoryAgent
 from factory import FactorySimulation
 
-app = FastAPI(title="Factory Floor Tycoon API")
+app = FastAPI(title="Factory Floor Tycoon API", version="1.1.0")
 
 # CORS middleware for frontend
 app.add_middleware(
