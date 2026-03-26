@@ -335,7 +335,7 @@ function App() {
                 roundData={roundData}
                 recentEvents={recentEvents}
               />
-              <EventLog events={events} actions={actions} />
+              <EventLog events={events} actions={actions} agents={agents} />
             </div>
 
             {/* Sidebar */}

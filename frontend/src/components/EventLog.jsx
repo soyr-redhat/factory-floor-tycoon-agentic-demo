@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useMemo } from 'react'
 
-function EventLog({ events, actions }) {
+function EventLog({ events, actions, agents }) {
   const logRef = useRef(null)
   const [expandedItems, setExpandedItems] = useState(new Set())
+  const [selectedAgent, setSelectedAgent] = useState('all')
 
   useEffect(() => {
     if (logRef.current) {
@@ -10,11 +11,31 @@ function EventLog({ events, actions }) {
     }
   }, [events, actions])
 
+  // Extract unique agent names from actions
+  const agentNames = useMemo(() => {
+    const names = new Set()
+    actions.forEach(action => {
+      if (action.agent) names.add(action.agent)
+    })
+    return Array.from(names).sort()
+  }, [actions])
+
   // Combine and sort events and actions by timestamp
-  const combined = [
-    ...events.map(e => ({ ...e, type: 'event' })),
-    ...actions.map(a => ({ ...a, type: 'action' }))
-  ].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0)).slice(0, 50)
+  const combined = useMemo(() => {
+    let items = [
+      ...events.map(e => ({ ...e, type: 'event' })),
+      ...actions.map(a => ({ ...a, type: 'action' }))
+    ].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0))
+
+    // Filter by selected agent
+    if (selectedAgent !== 'all') {
+      items = items.filter(item =>
+        item.type === 'event' || item.agent === selectedAgent
+      )
+    }
+
+    return items.slice(0, 50)
+  }, [events, actions, selectedAgent])
 
   const toggleExpand = (index) => {
     setExpandedItems(prev => {
@@ -24,9 +45,56 @@ function EventLog({ events, actions }) {
     })
   }
 
+  // Get agent color from the agents prop
+  const getAgentColor = (agentName) => {
+    const agent = agents?.find(a => a.name === agentName)
+    return agent?.color || '#EE0000'
+  }
+
   return (
     <div className="bg-gray-800 rounded-lg p-6">
-      <h3 className="text-xl font-bold mb-4">Activity Log</h3>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-xl font-bold">Activity Log</h3>
+        {agentNames.length > 1 && (
+          <div className="text-sm text-gray-400">
+            {selectedAgent === 'all' ? 'All Agents' : selectedAgent}
+          </div>
+        )}
+      </div>
+
+      {/* Agent filter bar */}
+      {agentNames.length > 1 && (
+        <div className="mb-4 flex flex-wrap gap-2">
+          <button
+            onClick={() => setSelectedAgent('all')}
+            className={`px-3 py-1 rounded text-sm font-medium transition ${
+              selectedAgent === 'all'
+                ? 'bg-redhat-red text-white'
+                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+            }`}
+          >
+            All
+          </button>
+          {agentNames.map(agentName => (
+            <button
+              key={agentName}
+              onClick={() => setSelectedAgent(agentName)}
+              className={`px-3 py-1 rounded text-sm font-medium transition flex items-center gap-2 ${
+                selectedAgent === agentName
+                  ? 'bg-gray-900 text-white ring-2'
+                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+              }`}
+              style={selectedAgent === agentName ? { ringColor: getAgentColor(agentName) } : {}}
+            >
+              <div
+                className="w-3 h-3 rounded-full"
+                style={{ backgroundColor: getAgentColor(agentName) }}
+              />
+              {agentName}
+            </button>
+          ))}
+        </div>
+      )}
       <div
         ref={logRef}
         className="bg-gray-900 rounded p-4 h-96 overflow-y-auto font-mono text-sm space-y-2"
@@ -60,6 +128,10 @@ function EventLog({ events, actions }) {
                   <span className="text-gray-400 select-none text-xs">
                     {isExpanded ? '▼' : '▶'}
                   </span>
+                  <div
+                    className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0"
+                    style={{ backgroundColor: getAgentColor(item.agent) }}
+                  />
                   <div className="flex-grow">
                     <span className="text-gray-500">[{item.agent}]</span> {item.action}
                   </div>
