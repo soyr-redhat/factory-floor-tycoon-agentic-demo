@@ -1,10 +1,21 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 function LeaderboardSubmit({ leaderboard, agents, apiUrl, onSubmitComplete }) {
-  const [userName, setUserName] = useState('')
+  const [userName, setUserName] = useState(() => {
+    // Load saved username from localStorage
+    return localStorage.getItem('leaderboard_username') || ''
+  })
   const [selectedAgents, setSelectedAgents] = useState({})
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [submittedAgents, setSubmittedAgents] = useState(() => {
+    // Load previously submitted agents from sessionStorage (cleared on browser close)
+    try {
+      return JSON.parse(sessionStorage.getItem('submitted_agents') || '[]')
+    } catch {
+      return []
+    }
+  })
 
   const toggleAgent = (agentName) => {
     setSelectedAgents(prev => ({
@@ -19,6 +30,11 @@ function LeaderboardSubmit({ leaderboard, agents, apiUrl, onSubmitComplete }) {
     if (agentsToSubmit.length === 0) {
       alert('Please select at least one agent to submit')
       return
+    }
+
+    // Save username to localStorage for future games
+    if (userName.trim()) {
+      localStorage.setItem('leaderboard_username', userName.trim())
     }
 
     setSubmitting(true)
@@ -39,12 +55,26 @@ function LeaderboardSubmit({ leaderboard, agents, apiUrl, onSubmitComplete }) {
       })
 
       // Submit each agent
+      let duplicateCount = 0
       for (const submission of submissions) {
-        await fetch(`${apiUrl}/leaderboard`, {
+        const response = await fetch(`${apiUrl}/leaderboard`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(submission)
         })
+        const result = await response.json()
+        if (result.duplicate) {
+          duplicateCount++
+        }
+      }
+
+      // Track submitted agents in session storage
+      const newSubmittedAgents = [...submittedAgents, ...agentsToSubmit.map(a => a.name)]
+      setSubmittedAgents(newSubmittedAgents)
+      sessionStorage.setItem('submitted_agents', JSON.stringify(newSubmittedAgents))
+
+      if (duplicateCount > 0) {
+        alert(`${duplicateCount} duplicate submission(s) were ignored. You may have already submitted these agents.`)
       }
 
       setSubmitted(true)
@@ -89,15 +119,19 @@ function LeaderboardSubmit({ leaderboard, agents, apiUrl, onSubmitComplete }) {
         <div className="space-y-2">
           {leaderboard.map((entry) => {
             const agent = agents.find(a => a.name === entry.name)
+            const alreadySubmitted = submittedAgents.includes(entry.name)
             return (
               <label
                 key={entry.name}
-                className="flex items-center gap-3 p-3 bg-gray-900 rounded cursor-pointer hover:bg-gray-700 transition"
+                className={`flex items-center gap-3 p-3 bg-gray-900 rounded ${
+                  alreadySubmitted ? 'opacity-50' : 'cursor-pointer hover:bg-gray-700'
+                } transition`}
               >
                 <input
                   type="checkbox"
                   checked={selectedAgents[entry.name] || false}
                   onChange={() => toggleAgent(entry.name)}
+                  disabled={alreadySubmitted}
                   className="w-5 h-5"
                 />
                 <div
@@ -105,7 +139,10 @@ function LeaderboardSubmit({ leaderboard, agents, apiUrl, onSubmitComplete }) {
                   style={{ backgroundColor: agent?.color || '#EE0000' }}
                 />
                 <div className="flex-grow">
-                  <div className="font-bold">{entry.name}</div>
+                  <div className="font-bold">
+                    {entry.name}
+                    {alreadySubmitted && <span className="ml-2 text-xs text-green-500">✓ Already submitted</span>}
+                  </div>
                   <div className="text-sm text-gray-400">
                     ${entry.profit.toFixed(2)} profit • {entry.items_shipped} shipped
                   </div>

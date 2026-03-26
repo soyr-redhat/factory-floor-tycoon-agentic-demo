@@ -240,16 +240,40 @@ async def post_to_leaderboard(entry: LeaderboardEntry):
     entry_dict = entry.model_dump()
     entry_dict['timestamp'] = datetime.utcnow().isoformat()
 
-    # Add to leaderboard
-    entries.append(entry_dict)
+    # Check for near-duplicate submissions (same agent, user, and stats within 5 minutes)
+    cutoff_time = datetime.utcnow()
+    is_duplicate = False
+    for existing in entries:
+        # Parse existing timestamp
+        try:
+            existing_time = datetime.fromisoformat(existing.get('timestamp', ''))
+            time_diff = (cutoff_time - existing_time).total_seconds()
+        except:
+            time_diff = float('inf')
 
-    # Keep only top 1000 entries to prevent unbounded growth
-    entries.sort(key=lambda x: x.get('profit', 0), reverse=True)
-    entries = entries[:1000]
+        # Check if this is a duplicate (same agent, user, and nearly identical results within 5 min)
+        if (existing.get('agent_name') == entry_dict['agent_name'] and
+            existing.get('user_name') == entry_dict['user_name'] and
+            abs(existing.get('profit', 0) - entry_dict['profit']) < 0.01 and
+            existing.get('items_shipped') == entry_dict['items_shipped'] and
+            time_diff < 300):  # 5 minutes
+            is_duplicate = True
+            print(f"Duplicate submission detected: {entry_dict['agent_name']} by {entry_dict['user_name']}")
+            break
 
-    save_leaderboard(entries)
+    if not is_duplicate:
+        # Add to leaderboard
+        entries.append(entry_dict)
 
-    return {"success": True, "rank": entries.index(entry_dict) + 1}
+        # Keep only top 1000 entries to prevent unbounded growth
+        entries.sort(key=lambda x: x.get('profit', 0), reverse=True)
+        entries = entries[:1000]
+
+        save_leaderboard(entries)
+
+        return {"success": True, "rank": entries.index(entry_dict) + 1, "duplicate": False}
+    else:
+        return {"success": True, "rank": -1, "duplicate": True, "message": "Duplicate submission ignored"}
 
 @app.get("/health")
 async def health_check():
