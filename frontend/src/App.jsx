@@ -273,7 +273,11 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-redhat-dark text-white flex flex-col">
+    <div className="min-h-screen bg-redhat-dark-bg text-white flex flex-col">
+      {/* Red Hat Brand Visual Elements */}
+      <div className="grid-background"></div>
+      <div className="scan-line"></div>
+
       {/* Toast Notifications */}
       <div className="fixed top-4 right-4 z-50 space-y-2">
         {toasts.map(toast => (
@@ -286,23 +290,23 @@ function App() {
       </div>
 
       {/* Header */}
-      <header className="bg-black">
+      <header className="bg-redhat-dark-surface border-b border-redhat-grid-line relative z-10">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-redhat-red">Factory Floor Tycoon</h1>
-              <p className="text-gray-400 mt-1">Agentic AI Demo</p>
+              <h1 className="text-3xl font-display font-bold text-redhat-red">Factory Floor Tycoon</h1>
+              <p className="text-redhat-text-secondary mt-1 font-mono text-xs uppercase tracking-wider">Pillar 01 / Agentic AI Demo</p>
             </div>
             <div className="text-right">
-              <div className="text-sm text-gray-400">Powered by</div>
-              <div className="text-redhat-red font-bold">Red Hat OpenShift AI</div>
+              <div className="text-sm font-mono text-redhat-text-tertiary uppercase tracking-wider">Powered by</div>
+              <div className="text-redhat-red font-display font-bold text-lg">Red Hat OpenShift AI</div>
             </div>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8 flex-grow">
+      <main className="container mx-auto px-4 py-8 flex-grow relative z-10">
         {gameState === 'setup' && (
           <AgentSetup onStart={startGame} apiUrl={API_URL} />
         )}
