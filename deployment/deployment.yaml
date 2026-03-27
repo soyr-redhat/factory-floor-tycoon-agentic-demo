@@ -38,7 +38,7 @@ spec:
               name: llm-credentials
               key: api-key
         - name: MODEL_NAME
-          value: "Mistral-Small-24B-W8A8"
+          value: "mistralai/Mistral-Nemo-Instruct-2407"
         - name: LEADERBOARD_PATH
           value: "/data/leaderboard.json"
         volumeMounts:
