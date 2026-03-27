@@ -38,19 +38,20 @@ jobs:
         run: |
           oc get namespace ${{ env.NAMESPACE }} || echo "Namespace does not exist - please create it manually"
 
-      - name: Apply secrets
-        run: |
-          cat <<EOF | oc apply -f -
-          apiVersion: v1
-          kind: Secret
-          metadata:
-            name: llm-credentials
-            namespace: ${{ env.NAMESPACE }}
-          type: Opaque
-          stringData:
-            api-url: "${{ secrets.LLM_API_URL }}"
-            api-key: "${{ secrets.LLM_API_KEY }}"
-          EOF
+      # Secrets are now managed manually in the cluster (using local vLLM server)
+      # - name: Apply secrets
+      #   run: |
+      #     cat <<EOF | oc apply -f -
+      #     apiVersion: v1
+      #     kind: Secret
+      #     metadata:
+      #       name: llm-credentials
+      #       namespace: ${{ env.NAMESPACE }}
+      #     type: Opaque
+      #     stringData:
+      #       api-url: "${{ secrets.LLM_API_URL }}"
+      #       api-key: "${{ secrets.LLM_API_KEY }}"
+      #     EOF
 
       - name: Apply PVC for leaderboard
         run: |
