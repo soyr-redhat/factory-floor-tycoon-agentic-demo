@@ -69,8 +69,13 @@ jobs:
 
       - name: Wait for builds to complete
         run: |
-          oc wait --for=condition=Complete --timeout=10m build -l buildconfig=factory-backend -n ${{ env.NAMESPACE }}
-          oc wait --for=condition=Complete --timeout=10m build -l buildconfig=factory-frontend -n ${{ env.NAMESPACE }}
+          # Get the latest build for each and wait only for those
+          BACKEND_BUILD=$(oc get builds -n ${{ env.NAMESPACE }} -l buildconfig=factory-backend --sort-by=.metadata.creationTimestamp -o name | tail -1)
+          FRONTEND_BUILD=$(oc get builds -n ${{ env.NAMESPACE }} -l buildconfig=factory-frontend --sort-by=.metadata.creationTimestamp -o name | tail -1)
+
+          echo "Waiting for $BACKEND_BUILD and $FRONTEND_BUILD..."
+          oc wait --for=condition=Complete --timeout=10m $BACKEND_BUILD -n ${{ env.NAMESPACE }}
+          oc wait --for=condition=Complete --timeout=10m $FRONTEND_BUILD -n ${{ env.NAMESPACE }}
 
       - name: Apply deployment manifests
         run: |
