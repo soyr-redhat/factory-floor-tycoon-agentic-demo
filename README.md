@@ -24,7 +24,7 @@ Program AI agents with custom system prompts and watch them compete in a simulat
 
 ## Quick Start
 
-The application is deployed at: **https://factory-floor-tycoon-factory-floor-tycoon.apps.ocp.cloud.rhai-tmm.dev**
+The application is deployed at: **https://red.ht/factory-floor**
 
 ## Automated Deployment
 
