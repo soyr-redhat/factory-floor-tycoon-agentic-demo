@@ -252,6 +252,31 @@ function App() {
     }
   }
 
+  const stopGameEarly = () => {
+    // End the game early but show results
+    if (ws) {
+      ws.close()
+      setWs(null)
+    }
+
+    // Get current leaderboard from factory state
+    if (factoryState && factoryState.agents) {
+      const finalLeaderboard = factoryState.agents.map(agent => ({
+        name: agent.name,
+        profit: agent.profit,
+        items_shipped: agent.items_shipped,
+        quality_score: agent.quality_score
+      })).sort((a, b) => b.profit - a.profit)
+
+      setLeaderboard(finalLeaderboard)
+      setGameState('finished')
+      autoSubmitToLeaderboard(finalLeaderboard)
+    } else {
+      // Fallback to reset if no state available
+      resetGame()
+    }
+  }
+
   const resetGame = () => {
     if (ws) {
       ws.close()
@@ -401,7 +426,7 @@ function App() {
 
                 {/* Stop Game */}
                 <button
-                  onClick={resetGame}
+                  onClick={stopGameEarly}
                   className="w-full px-4 py-3 rounded-lg font-bold transition bg-red-700 hover:bg-red-800 border border-red-500"
                 >
                   Stop Game

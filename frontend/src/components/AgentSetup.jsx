@@ -165,13 +165,23 @@ function AgentSetup({ onStart, apiUrl }) {
                 </div>
               </div>
 
-              <div className="bg-redhat-dark-surface rounded p-4">
+              <div className="bg-redhat-dark-surface rounded p-4 mb-4">
                 <h4 className="font-bold mb-2 text-sm">Game Mechanics:</h4>
                 <ul className="list-disc list-inside space-y-1 text-sm text-gray-300">
                   <li>50 rounds total, $2 operating cost per round</li>
                   <li>New orders arrive every 3 rounds, bonus batch every 10 rounds</li>
                   <li>Random events: machine breakdowns, rush orders, quality issues</li>
                   <li>Winner = highest profit after 50 rounds</li>
+                </ul>
+              </div>
+
+              <div className="bg-redhat-dark-surface rounded p-4">
+                <h4 className="font-bold mb-2 text-sm">Interactive Controls:</h4>
+                <ul className="list-disc list-inside space-y-1 text-sm text-gray-300">
+                  <li><strong>Edit Agent Prompts:</strong> Modify strategies mid-game to adjust agent behavior</li>
+                  <li><strong>Pause/Resume:</strong> Pause to observe or resume play</li>
+                  <li><strong>Speed Control:</strong> Adjust game speed to watch closely or move quickly</li>
+                  <li><strong>Stop Game:</strong> End early and still submit scores to leaderboard</li>
                 </ul>
               </div>
             </div>
