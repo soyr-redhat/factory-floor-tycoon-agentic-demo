@@ -5,6 +5,7 @@ import Leaderboard from './components/Leaderboard'
 import EventLog from './components/EventLog'
 import ProfitChart from './components/ProfitChart'
 import Toast from './components/Toast'
+import PromptEditor from './components/PromptEditor'
 import { generateRandomName } from './utils/nameGenerator'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
@@ -39,6 +40,7 @@ function App() {
   const [leaderboardSubmitted, setLeaderboardSubmitted] = useState(false)
   const [userName, setUserName] = useState('')
   const [showUserNamePrompt, setShowUserNamePrompt] = useState(false)
+  const [showPromptEditor, setShowPromptEditor] = useState(false)
 
   // Rotate tips while loading
   useEffect(() => {
@@ -270,6 +272,7 @@ function App() {
     setLeaderboardSubmitted(false)
     setShowUserNamePrompt(false)
     setUserName('')
+    setShowPromptEditor(false)
   }
 
   return (
@@ -362,7 +365,7 @@ function App() {
                 </button>
 
                 {/* Speed Control */}
-                <div>
+                <div className="mb-4">
                   <label className="block text-sm font-medium mb-2">Speed</label>
                   <div className="grid grid-cols-2 gap-2">
                     <button
@@ -387,6 +390,22 @@ function App() {
                     </button>
                   </div>
                 </div>
+
+                {/* Edit Prompts */}
+                <button
+                  onClick={() => setShowPromptEditor(true)}
+                  className="w-full mb-4 px-4 py-3 rounded-lg font-bold transition bg-blue-600 hover:bg-blue-700"
+                >
+                  Edit Agent Prompts
+                </button>
+
+                {/* Stop Game */}
+                <button
+                  onClick={resetGame}
+                  className="w-full px-4 py-3 rounded-lg font-bold transition bg-red-700 hover:bg-red-800 border border-red-500"
+                >
+                  Stop Game
+                </button>
               </div>
 
               {/* Profit Chart */}
@@ -448,6 +467,16 @@ function App() {
           </div>
         )}
       </main>
+
+      {/* Prompt Editor Modal */}
+      {gameState === 'running' && (
+        <PromptEditor
+          agents={agents}
+          ws={ws}
+          isOpen={showPromptEditor}
+          onClose={() => setShowPromptEditor(false)}
+        />
+      )}
 
     </div>
   )

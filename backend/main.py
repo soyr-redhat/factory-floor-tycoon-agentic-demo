@@ -153,6 +153,21 @@ async def websocket_endpoint(websocket: WebSocket, game_id: str):
                     simulation.paused = False
                 elif message.get("type") == "speed":
                     simulation.speed = message.get("speed", 1.0)
+                elif message.get("type") == "update_prompt":
+                    # Update an agent's system prompt mid-game
+                    agent_name = message.get("agent_name")
+                    new_prompt = message.get("prompt")
+                    if agent_name and new_prompt:
+                        for agent in simulation.agents:
+                            if agent.name == agent_name:
+                                agent.system_prompt = new_prompt
+                                print(f"Updated prompt for {agent_name}")
+                                # Send confirmation back to client
+                                await websocket.send_json({
+                                    "type": "prompt_updated",
+                                    "agent_name": agent_name
+                                })
+                                break
         except:
             pass
 
