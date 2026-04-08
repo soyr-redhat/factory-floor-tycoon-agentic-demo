@@ -6,6 +6,7 @@ import EventLog from './components/EventLog'
 import ProfitChart from './components/ProfitChart'
 import Toast from './components/Toast'
 import PromptEditor from './components/PromptEditor'
+import ThemeToggle from './components/ThemeToggle'
 import { generateRandomName } from './utils/nameGenerator'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
@@ -324,9 +325,12 @@ function App() {
               <h1 className="text-3xl font-display font-bold text-redhat-red">Factory Floor Tycoon</h1>
               <p className="text-redhat-text-secondary mt-1 font-mono text-xs uppercase tracking-wider">Pillar 01 / Agentic AI Demo</p>
             </div>
-            <div className="text-right">
-              <div className="text-sm font-mono text-redhat-text-tertiary uppercase tracking-wider">Powered by</div>
-              <div className="text-redhat-red font-display font-bold text-lg">Red Hat OpenShift AI</div>
+            <div className="flex items-center gap-4">
+              <ThemeToggle />
+              <div className="text-right">
+                <div className="text-sm font-mono text-redhat-text-tertiary uppercase tracking-wider">Powered by</div>
+                <div className="text-redhat-red font-display font-bold text-lg">Red Hat OpenShift AI</div>
+              </div>
             </div>
           </div>
         </div>

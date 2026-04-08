@@ -10,13 +10,13 @@ export default {
         'redhat': {
           red: '#EE0000',
           'red-hover': '#FF3333',
-          'dark-bg': '#0A0A0A',
-          'dark-surface': '#151515',
-          'dark-elevated': '#1F1F1F',
-          'text-primary': '#FFFFFF',
-          'text-secondary': '#B8B8B8',
-          'text-tertiary': '#6B6B6B',
-          'grid-line': 'rgba(238, 0, 0, 0.08)',
+          'dark-bg': 'var(--bg-primary)',
+          'dark-surface': 'var(--bg-surface)',
+          'dark-elevated': 'var(--bg-elevated)',
+          'text-primary': 'var(--text-primary)',
+          'text-secondary': 'var(--text-secondary)',
+          'text-tertiary': 'var(--text-tertiary)',
+          'grid-line': 'rgba(238, 0, 0, var(--grid-opacity-bright))',
         }
       },
       fontFamily: {
