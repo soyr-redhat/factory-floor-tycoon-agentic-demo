@@ -21,8 +21,8 @@ function ThemeToggle() {
       onClick={toggleTheme}
       className="bg-redhat-dark-elevated border border-redhat-grid-line hover:bg-redhat-red hover:border-redhat-red px-4 py-2 rounded transition-all font-mono text-xs uppercase tracking-wider flex items-center gap-2 relative z-50"
     >
-      <span>{theme === 'dark' ? '☾' : '☀'}</span>
-      <span>{theme === 'dark' ? 'Dark' : 'Light'}</span>
+      <span>{theme === 'dark' ? '☀' : '☾'}</span>
+      <span>{theme === 'dark' ? 'Light' : 'Dark'}</span>
     </button>
   )
 }
