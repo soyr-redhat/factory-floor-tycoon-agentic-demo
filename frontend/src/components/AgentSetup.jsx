@@ -224,7 +224,7 @@ function AgentSetup({ onStart, apiUrl }) {
                         type="text"
                         value={agent.name}
                         onChange={(e) => updateAgent(index, 'name', e.target.value)}
-                        className="bg-redhat-dark-surface text-white px-3 py-2 rounded text-lg font-bold"
+                        className="bg-redhat-dark-surface text-redhat-text-primary px-3 py-2 rounded text-lg font-bold"
                         placeholder="Agent Name"
                       />
                     </div>
@@ -243,7 +243,7 @@ function AgentSetup({ onStart, apiUrl }) {
                     <select
                       value={agent.preset}
                       onChange={(e) => updateAgent(index, 'preset', e.target.value)}
-                      className="w-full bg-redhat-dark-surface text-white px-3 py-2 rounded"
+                      className="w-full bg-redhat-dark-surface text-redhat-text-primary px-3 py-2 rounded"
                     >
                       <option value="">Custom</option>
                       {Object.entries(presets).map(([key, preset]) => (
@@ -257,7 +257,7 @@ function AgentSetup({ onStart, apiUrl }) {
                     <textarea
                       value={agent.system_prompt}
                       onChange={(e) => updateAgent(index, 'system_prompt', e.target.value)}
-                      className="w-full bg-redhat-dark-surface text-white px-3 py-2 rounded h-32 font-mono text-sm"
+                      className="w-full bg-redhat-dark-surface text-redhat-text-primary px-3 py-2 rounded h-32 font-mono text-sm"
                       placeholder="Enter the strategy for this agent..."
                     />
                   </div>

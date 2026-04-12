@@ -81,7 +81,7 @@ function EventLog({ events, actions, agents }) {
               onClick={() => setSelectedAgent(agentName)}
               className={`px-3 py-1 rounded text-sm font-medium transition flex items-center gap-2 ${
                 selectedAgent === agentName
-                  ? 'bg-redhat-dark-elevated text-white ring-2'
+                  ? 'bg-redhat-dark-elevated text-redhat-text-primary ring-2'
                   : 'bg-redhat-dark-surface/80 text-redhat-text-secondary hover:bg-redhat-red/20'
               }`}
               style={selectedAgent === agentName ? { ringColor: getAgentColor(agentName) } : {}}

@@ -61,7 +61,7 @@ function PromptEditor({ agents, ws, isOpen, onClose }) {
             <select
               value={selectedAgent}
               onChange={(e) => setSelectedAgent(e.target.value)}
-              className="w-full bg-redhat-dark-elevated text-white px-4 py-2 rounded border border-redhat-grid-line"
+              className="w-full bg-redhat-dark-elevated text-redhat-text-primary px-4 py-2 rounded border border-redhat-grid-line"
             >
               {agents.map(agent => (
                 <option key={agent.name} value={agent.name}>
@@ -83,7 +83,7 @@ function PromptEditor({ agents, ws, isOpen, onClose }) {
                   ...editedPrompts,
                   [selectedAgent]: e.target.value
                 })}
-                className="w-full bg-redhat-dark-elevated text-white px-4 py-3 rounded border border-redhat-grid-line font-mono text-sm min-h-[300px]"
+                className="w-full bg-redhat-dark-elevated text-redhat-text-primary px-4 py-3 rounded border border-redhat-grid-line font-mono text-sm min-h-[300px]"
                 placeholder="Enter agent system prompt..."
               />
               <p className="text-xs text-redhat-text-tertiary mt-2">

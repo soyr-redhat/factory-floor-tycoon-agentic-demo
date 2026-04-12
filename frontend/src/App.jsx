@@ -302,7 +302,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-redhat-dark-bg text-white flex flex-col">
+    <div className="min-h-screen bg-redhat-dark-bg text-redhat-text-primary flex flex-col">
       {/* Red Hat Brand Visual Elements */}
       <div className="grid-background"></div>
 

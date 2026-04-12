@@ -108,7 +108,7 @@ function LeaderboardSubmit({ leaderboard, agents, apiUrl, onSubmitComplete }) {
           type="text"
           value={userName}
           onChange={(e) => setUserName(e.target.value)}
-          className="w-full bg-redhat-dark-elevated text-white px-3 py-2 rounded"
+          className="w-full bg-redhat-dark-elevated text-redhat-text-primary px-3 py-2 rounded"
           placeholder="Anonymous"
           maxLength={30}
         />
