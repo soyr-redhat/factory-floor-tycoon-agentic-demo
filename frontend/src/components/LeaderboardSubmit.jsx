@@ -93,7 +93,7 @@ function LeaderboardSubmit({ leaderboard, agents, apiUrl, onSubmitComplete }) {
     return (
       <div className="bg-redhat-dark-surface rounded-lg p-6 text-center">
         <div className="text-green-500 text-xl font-bold mb-2">✓ Submitted to Leaderboard!</div>
-        <p className="text-gray-300">Your agents have been added to the global leaderboard.</p>
+        <p className="text-redhat-text-secondary">Your agents have been added to the global leaderboard.</p>
       </div>
     )
   }
@@ -143,7 +143,7 @@ function LeaderboardSubmit({ leaderboard, agents, apiUrl, onSubmitComplete }) {
                     {entry.name}
                     {alreadySubmitted && <span className="ml-2 text-xs text-green-500">✓ Already submitted</span>}
                   </div>
-                  <div className="text-sm text-gray-400">
+                  <div className="text-sm text-redhat-text-secondary">
                     ${entry.profit.toFixed(2)} profit • {entry.items_shipped} shipped
                   </div>
                 </div>

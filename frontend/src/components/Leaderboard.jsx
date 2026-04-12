@@ -23,7 +23,7 @@ function Leaderboard({ leaderboard, showDetails = false }) {
                 <div>
                   <div className="font-bold">{agent.name}</div>
                   {showDetails && (
-                    <div className="text-xs text-gray-400 mt-1">
+                    <div className="text-xs text-redhat-text-secondary mt-1">
                       <div>Shipped: {agent.items_shipped} items</div>
                       <div>Quality: {agent.quality_score?.toFixed(0)}%</div>
                     </div>
@@ -34,7 +34,7 @@ function Leaderboard({ leaderboard, showDetails = false }) {
                 <div className="text-xl font-bold text-green-400">
                   ${agent.profit?.toFixed(2) || '0.00'}
                 </div>
-                <div className="text-xs text-gray-400">profit</div>
+                <div className="text-xs text-redhat-text-secondary">profit</div>
               </div>
             </div>
           </div>

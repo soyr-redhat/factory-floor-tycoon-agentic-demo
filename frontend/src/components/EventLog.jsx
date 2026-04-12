@@ -56,7 +56,7 @@ function EventLog({ events, actions, agents }) {
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-xl font-bold">Activity Log</h3>
         {agentNames.length > 1 && (
-          <div className="text-sm text-gray-400">
+          <div className="text-sm text-redhat-text-secondary">
             {selectedAgent === 'all' ? 'All Agents' : selectedAgent}
           </div>
         )}
@@ -70,7 +70,7 @@ function EventLog({ events, actions, agents }) {
             className={`px-3 py-1 rounded text-sm font-medium transition ${
               selectedAgent === 'all'
                 ? 'bg-redhat-red text-white'
-                : 'bg-redhat-dark-surface/80 text-gray-300 hover:bg-redhat-red/20'
+                : 'bg-redhat-dark-surface/80 text-redhat-text-secondary hover:bg-redhat-red/20'
             }`}
           >
             All
@@ -82,7 +82,7 @@ function EventLog({ events, actions, agents }) {
               className={`px-3 py-1 rounded text-sm font-medium transition flex items-center gap-2 ${
                 selectedAgent === agentName
                   ? 'bg-redhat-dark-elevated text-white ring-2'
-                  : 'bg-redhat-dark-surface/80 text-gray-300 hover:bg-redhat-red/20'
+                  : 'bg-redhat-dark-surface/80 text-redhat-text-secondary hover:bg-redhat-red/20'
               }`}
               style={selectedAgent === agentName ? { ringColor: getAgentColor(agentName) } : {}}
             >
@@ -100,7 +100,7 @@ function EventLog({ events, actions, agents }) {
         className="bg-redhat-dark-elevated rounded p-4 h-96 overflow-y-auto font-mono text-sm space-y-2"
       >
         {combined.length === 0 && (
-          <div className="text-gray-500 text-center py-8">
+          <div className="text-redhat-text-secondary text-center py-8">
             Waiting for activity...
           </div>
         )}
@@ -108,7 +108,7 @@ function EventLog({ events, actions, agents }) {
           if (item.type === 'event') {
             return (
               <div key={index} className="text-yellow-400 border-l-2 border-yellow-400 pl-2">
-                <span className="text-gray-500">[EVENT]</span> {item.description}
+                <span className="text-redhat-text-secondary">[EVENT]</span> {item.description}
               </div>
             )
           } else {
@@ -125,7 +125,7 @@ function EventLog({ events, actions, agents }) {
                   onClick={() => toggleExpand(index)}
                   title="Click to expand/collapse"
                 >
-                  <span className="text-gray-400 select-none text-xs">
+                  <span className="text-redhat-text-secondary select-none text-xs">
                     {isExpanded ? '▼' : '▶'}
                   </span>
                   <div
@@ -133,11 +133,11 @@ function EventLog({ events, actions, agents }) {
                     style={{ backgroundColor: getAgentColor(item.agent) }}
                   />
                   <div className="flex-grow">
-                    <span className="text-gray-500">[{item.agent}]</span> {item.action}
+                    <span className="text-redhat-text-secondary">[{item.agent}]</span> {item.action}
                   </div>
                 </div>
                 {item.reasoning && (
-                  <div className="text-xs text-gray-500 ml-6 mt-1">
+                  <div className="text-xs text-redhat-text-secondary ml-6 mt-1">
                     💭 {isExpanded ? item.reasoning : `${item.reasoning.substring(0, 100)}...`}
                   </div>
                 )}

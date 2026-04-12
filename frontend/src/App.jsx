@@ -346,13 +346,13 @@ function App() {
           <div className="flex items-center justify-center min-h-[400px]">
             <div className="text-center max-w-2xl">
               <div className="text-2xl font-bold mb-2">Starting Factory...</div>
-              <div className="text-gray-400 mb-6">Initializing agents and machinery</div>
+              <div className="text-redhat-text-secondary mb-6">Initializing agents and machinery</div>
               <div className="mb-6">
                 <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-redhat-red border-r-transparent"></div>
               </div>
               <div className="min-h-[80px] flex flex-col items-center justify-center">
                 <div className="text-sm font-semibold text-redhat-red mb-2">TIP</div>
-                <div key={currentTip} className="text-gray-300 animate-fade-in">
+                <div key={currentTip} className="text-redhat-text-secondary animate-fade-in">
                   {LOADING_TIPS[currentTip]}
                 </div>
               </div>
@@ -458,7 +458,7 @@ function App() {
               {showUserNamePrompt && (
                 <div className="mt-6 p-6 bg-redhat-dark-elevated rounded-lg">
                   <h3 className="text-lg font-bold mb-3">Claim Your Agents (Optional)</h3>
-                  <p className="text-gray-400 text-sm mb-4">
+                  <p className="text-redhat-text-secondary text-sm mb-4">
                     Your results were submitted anonymously. Want to add your name?
                   </p>
                   <div className="flex gap-3 max-w-md mx-auto">
@@ -466,7 +466,7 @@ function App() {
                       type="text"
                       value={userName}
                       onChange={(e) => setUserName(e.target.value)}
-                      className="flex-grow bg-redhat-dark-surface text-white px-4 py-2 rounded"
+                      className="flex-grow bg-redhat-dark-surface text-redhat-text-primary px-4 py-2 rounded"
                       placeholder="Your name (optional)"
                       maxLength={30}
                     />
@@ -478,7 +478,7 @@ function App() {
                     </button>
                     <button
                       onClick={() => setShowUserNamePrompt(false)}
-                      className="bg-redhat-dark-surface/80 text-white px-6 py-2 rounded hover:bg-redhat-red/20 transition"
+                      className="bg-redhat-dark-surface/80 text-redhat-text-primary px-6 py-2 rounded hover:bg-redhat-red/20 transition"
                     >
                       Skip
                     </button>

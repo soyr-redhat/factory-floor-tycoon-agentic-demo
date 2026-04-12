@@ -23,7 +23,7 @@ function GlobalLeaderboard({ apiUrl }) {
   if (loading) {
     return (
       <div className="bg-redhat-dark-surface rounded-lg p-6 text-center">
-        <div className="text-gray-400">Loading leaderboard...</div>
+        <div className="text-redhat-text-secondary">Loading leaderboard...</div>
       </div>
     )
   }
@@ -41,7 +41,7 @@ function GlobalLeaderboard({ apiUrl }) {
             ↻ Refresh
           </button>
         </div>
-        <div className="text-center text-gray-400 py-8">
+        <div className="text-center text-redhat-text-secondary py-8">
           <p className="mb-2">No entries yet. Be the first!</p>
           <p className="text-sm">Win a game and submit your agent to appear here.</p>
         </div>
@@ -61,7 +61,7 @@ function GlobalLeaderboard({ apiUrl }) {
           ↻ Refresh
         </button>
       </div>
-      <p className="text-sm text-gray-400 mb-4">Top performing agents from around the world</p>
+      <p className="text-sm text-redhat-text-secondary mb-4">Top performing agents from around the world</p>
 
       <div className="space-y-2 overflow-hidden">
         {leaderboard.map((entry, index) => (
@@ -75,27 +75,27 @@ function GlobalLeaderboard({ apiUrl }) {
               {index === 0 && '🥇'}
               {index === 1 && '🥈'}
               {index === 2 && '🥉'}
-              {index > 2 && <span className="text-gray-500">{index + 1}</span>}
+              {index > 2 && <span className="text-redhat-text-secondary">{index + 1}</span>}
             </div>
 
             <div className="flex-grow min-w-0">
               <div className="flex items-center gap-1 mb-1">
                 <span className="font-bold text-sm truncate">{entry.agent_name}</span>
               </div>
-              <div className="text-xs text-gray-400 truncate">
+              <div className="text-xs text-redhat-text-secondary truncate">
                 by {entry.user_name}
               </div>
-              <div className="text-xs text-gray-500 truncate mt-1">
+              <div className="text-xs text-redhat-text-secondary truncate mt-1">
                 {entry.strategy_preview?.substring(0, 40)}...
               </div>
             </div>
 
             <div className="text-right flex-shrink-0">
               <div className="font-bold text-green-400 text-sm">${entry.profit.toFixed(2)}</div>
-              <div className="text-xs text-gray-400 whitespace-nowrap">
+              <div className="text-xs text-redhat-text-secondary whitespace-nowrap">
                 {entry.items_shipped} ship
               </div>
-              <div className="text-xs text-gray-400 whitespace-nowrap">
+              <div className="text-xs text-redhat-text-secondary whitespace-nowrap">
                 {entry.quality_score.toFixed(0)}% qual
               </div>
             </div>

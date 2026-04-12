@@ -67,13 +67,13 @@ function AgentSetup({ onStart, apiUrl }) {
     <div className="max-w-6xl mx-auto">
       {/* Tab Navigation */}
       <div className="bg-redhat-dark-surface rounded-t-lg overflow-hidden">
-        <div className="flex border-b border-gray-700">
+        <div className="flex border-b border-redhat-grid-line">
           <button
             onClick={() => setActiveTab('about')}
             className={`flex-1 px-6 py-4 text-lg font-semibold transition ${
               activeTab === 'about'
                 ? 'bg-redhat-dark-elevated text-redhat-red border-b-2 border-redhat-red'
-                : 'text-gray-400 hover:text-white hover:bg-redhat-dark-elevated'
+                : 'text-redhat-text-secondary hover:text-white hover:bg-redhat-dark-elevated'
             }`}
           >
             About
@@ -83,7 +83,7 @@ function AgentSetup({ onStart, apiUrl }) {
             className={`flex-1 px-6 py-4 text-lg font-semibold transition ${
               activeTab === 'setup'
                 ? 'bg-redhat-dark-elevated text-redhat-red border-b-2 border-redhat-red'
-                : 'text-gray-400 hover:text-white hover:bg-redhat-dark-elevated'
+                : 'text-redhat-text-secondary hover:text-white hover:bg-redhat-dark-elevated'
             }`}
           >
             Setup Agents
@@ -93,7 +93,7 @@ function AgentSetup({ onStart, apiUrl }) {
             className={`flex-1 px-6 py-4 text-lg font-semibold transition ${
               activeTab === 'leaderboard'
                 ? 'bg-redhat-dark-elevated text-redhat-red border-b-2 border-redhat-red'
-                : 'text-gray-400 hover:text-white hover:bg-redhat-dark-elevated'
+                : 'text-redhat-text-secondary hover:text-white hover:bg-redhat-dark-elevated'
             }`}
           >
             Leaderboard
@@ -110,7 +110,7 @@ function AgentSetup({ onStart, apiUrl }) {
 
             <div className="bg-redhat-dark-elevated rounded-lg p-6 mb-6">
               <h3 className="text-xl font-bold mb-3 text-redhat-red">About Agentic AI</h3>
-              <p className="text-gray-300 mb-4">
+              <p className="text-redhat-text-secondary mb-4">
                 <strong>Agentic AI</strong> is a form of artificial intelligence that can take autonomous action
                 to achieve goals. These AI agents can make decisions, use tools, and adapt to changing conditions
                 without constant human guidance. Watch as they compete to run the most profitable factory floor!
@@ -118,7 +118,7 @@ function AgentSetup({ onStart, apiUrl }) {
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <h4 className="font-bold mb-2">What You'll See:</h4>
-                  <ul className="list-disc list-inside space-y-1 text-sm text-gray-300">
+                  <ul className="list-disc list-inside space-y-1 text-sm text-redhat-text-secondary">
                     <li><strong>Tool Use:</strong> Agents decide when to produce, inspect, package, ship, or repair</li>
                     <li><strong>Reasoning:</strong> Watch agents explain their decisions in real-time</li>
                     <li><strong>Adaptation:</strong> Agents respond to events like machine breakdowns and rush orders</li>
@@ -127,7 +127,7 @@ function AgentSetup({ onStart, apiUrl }) {
                 </div>
                 <div>
                   <h4 className="font-bold mb-2">Key Concepts:</h4>
-                  <ul className="list-disc list-inside space-y-1 text-sm text-gray-300">
+                  <ul className="list-disc list-inside space-y-1 text-sm text-redhat-text-secondary">
                     <li><strong>System Prompts:</strong> Define agent behavior and strategy</li>
                     <li><strong>Function Calling:</strong> Agents choose which tools to use autonomously</li>
                     <li><strong>State Management:</strong> Agents track energy, quality, and profit</li>
@@ -139,7 +139,7 @@ function AgentSetup({ onStart, apiUrl }) {
 
             <div className="bg-redhat-dark-elevated rounded-lg p-6 mb-8">
               <h3 className="font-bold mb-3 text-redhat-red text-xl">How to Play</h3>
-              <p className="text-gray-300 mb-4">
+              <p className="text-redhat-text-secondary mb-4">
                 Factory Floor Tycoon is a competitive simulation where AI agents manage a factory floor.
                 Your job is to write the best strategy prompt that will guide your agent to maximum profit!
               </p>
@@ -147,7 +147,7 @@ function AgentSetup({ onStart, apiUrl }) {
               <div className="grid md:grid-cols-2 gap-6 mb-4">
                 <div>
                   <h4 className="font-bold mb-2 text-sm">Gameplay:</h4>
-                  <ul className="list-disc list-inside space-y-1 text-sm text-gray-300">
+                  <ul className="list-disc list-inside space-y-1 text-sm text-redhat-text-secondary">
                     <li><strong>Choose a preset or write custom strategy</strong></li>
                     <li><strong>Agents make autonomous decisions</strong></li>
                     <li><strong>Profit = Shipped units × $10 × Quality Score</strong></li>
@@ -157,7 +157,7 @@ function AgentSetup({ onStart, apiUrl }) {
                 </div>
                 <div>
                   <h4 className="font-bold mb-2 text-sm">Powerups:</h4>
-                  <ul className="list-disc list-inside space-y-1 text-sm text-gray-300">
+                  <ul className="list-disc list-inside space-y-1 text-sm text-redhat-text-secondary">
                     <li><strong>Energy Drink ($20):</strong> Restore +50 energy</li>
                     <li><strong>Quality Boost ($30):</strong> Add +20% quality</li>
                     <li><strong>Efficiency Upgrade ($50):</strong> -20% energy costs permanently</li>
@@ -167,7 +167,7 @@ function AgentSetup({ onStart, apiUrl }) {
 
               <div className="bg-redhat-dark-surface rounded p-4 mb-4">
                 <h4 className="font-bold mb-2 text-sm">Game Mechanics:</h4>
-                <ul className="list-disc list-inside space-y-1 text-sm text-gray-300">
+                <ul className="list-disc list-inside space-y-1 text-sm text-redhat-text-secondary">
                   <li>50 rounds total, $2 operating cost per round</li>
                   <li>New orders arrive every 3 rounds, bonus batch every 10 rounds</li>
                   <li>Random events: machine breakdowns, rush orders, quality issues</li>
@@ -177,7 +177,7 @@ function AgentSetup({ onStart, apiUrl }) {
 
               <div className="bg-redhat-dark-surface rounded p-4">
                 <h4 className="font-bold mb-2 text-sm">Interactive Controls:</h4>
-                <ul className="list-disc list-inside space-y-1 text-sm text-gray-300">
+                <ul className="list-disc list-inside space-y-1 text-sm text-redhat-text-secondary">
                   <li><strong>Edit Agent Prompts:</strong> Modify strategies mid-game to adjust agent behavior</li>
                   <li><strong>Pause/Resume:</strong> Pause to observe or resume play</li>
                   <li><strong>Speed Control:</strong> Adjust game speed to watch closely or move quickly</li>

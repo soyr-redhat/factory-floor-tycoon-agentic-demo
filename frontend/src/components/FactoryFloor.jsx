@@ -35,22 +35,22 @@ function FactoryFloor({ state, agents, roundData, recentEvents = [] }) {
         <div className={`bg-redhat-dark-elevated rounded-lg p-4 text-center ${getMachineColor('assembly')}`}>
           <div className="text-3xl mb-2">{getMachineStatus('assembly')}</div>
           <div className="font-bold">Assembly</div>
-          <div className="text-xs text-gray-400">Produce items</div>
+          <div className="text-xs text-redhat-text-secondary">Produce items</div>
         </div>
         <div className={`bg-redhat-dark-elevated rounded-lg p-4 text-center ${getMachineColor('qc')}`}>
           <div className="text-3xl mb-2">{getMachineStatus('qc')}</div>
           <div className="font-bold">Quality Control</div>
-          <div className="text-xs text-gray-400">Inspect quality</div>
+          <div className="text-xs text-redhat-text-secondary">Inspect quality</div>
         </div>
         <div className={`bg-redhat-dark-elevated rounded-lg p-4 text-center ${getMachineColor('packaging')}`}>
           <div className="text-3xl mb-2">{getMachineStatus('packaging')}</div>
           <div className="font-bold">Packaging</div>
-          <div className="text-xs text-gray-400">Package items</div>
+          <div className="text-xs text-redhat-text-secondary">Package items</div>
         </div>
         <div className={`bg-redhat-dark-elevated rounded-lg p-4 text-center ${getMachineColor('shipping')}`}>
           <div className="text-3xl mb-2">{getMachineStatus('shipping')}</div>
           <div className="font-bold">Shipping</div>
-          <div className="text-xs text-gray-400">Ship orders</div>
+          <div className="text-xs text-redhat-text-secondary">Ship orders</div>
         </div>
       </div>
 
@@ -78,7 +78,7 @@ function FactoryFloor({ state, agents, roundData, recentEvents = [] }) {
                     <div>
                       <h4 className="font-bold text-lg">{agentState.name}</h4>
                       {agentState.thinking && (
-                        <p className="text-xs text-gray-400 italic mt-1">
+                        <p className="text-xs text-redhat-text-secondary italic mt-1">
                           "{agentState.thinking.substring(0, 80)}..."
                         </p>
                       )}
@@ -87,14 +87,14 @@ function FactoryFloor({ state, agents, roundData, recentEvents = [] }) {
                       <div className="text-2xl font-bold text-green-400">
                         ${agentState.profit.toFixed(2)}
                       </div>
-                      <div className="text-xs text-gray-400">Profit</div>
+                      <div className="text-xs text-redhat-text-secondary">Profit</div>
                     </div>
                   </div>
 
                   {/* Stats Grid */}
                   <div className="grid grid-cols-3 gap-2 text-sm mb-2">
                     <div>
-                      <div className="text-gray-400 text-xs">Energy</div>
+                      <div className="text-redhat-text-secondary text-xs">Energy</div>
                       <div className="flex items-center gap-1">
                         <div className="flex-grow bg-redhat-dark-surface/80 rounded-full h-2 overflow-hidden">
                           <div
@@ -110,46 +110,46 @@ function FactoryFloor({ state, agents, roundData, recentEvents = [] }) {
                       </div>
                     </div>
                     <div>
-                      <div className="text-gray-400 text-xs">Quality</div>
+                      <div className="text-redhat-text-secondary text-xs">Quality</div>
                       <div className="font-mono">{agentState.quality_score.toFixed(0)}%</div>
                     </div>
                     <div>
-                      <div className="text-gray-400 text-xs">Inventory</div>
+                      <div className="text-redhat-text-secondary text-xs">Inventory</div>
                       <div className="font-mono">{agentState.inventory || 0}</div>
                     </div>
                   </div>
                   <div className="grid grid-cols-3 gap-2 text-sm">
                     <div>
-                      <div className="text-gray-400 text-xs">Orders</div>
+                      <div className="text-redhat-text-secondary text-xs">Orders</div>
                       <div className="font-mono">{agentState.pending_orders || 0}</div>
                     </div>
                     <div>
-                      <div className="text-gray-400 text-xs">Produced</div>
+                      <div className="text-redhat-text-secondary text-xs">Produced</div>
                       <div className="font-mono">{agentState.items_produced}</div>
                     </div>
                     <div>
-                      <div className="text-gray-400 text-xs">Shipped</div>
+                      <div className="text-redhat-text-secondary text-xs">Shipped</div>
                       <div className="font-mono">{agentState.items_shipped}</div>
                     </div>
                   </div>
 
                   {/* Power-ups */}
-                  <div className="mt-3 pt-3 border-t border-gray-700">
-                    <div className="text-gray-400 text-xs mb-2 font-semibold">POWER-UPS</div>
+                  <div className="mt-3 pt-3 border-t border-redhat-grid-line">
+                    <div className="text-redhat-text-secondary text-xs mb-2 font-semibold">POWER-UPS</div>
                     <div className="flex flex-wrap gap-1">
                       {agentState.energy_cost_multiplier < 1.0 ? (
                         <span className="bg-purple-600 text-white px-2 py-1 rounded text-xs">
                           ⚡ Efficiency +20%
                         </span>
                       ) : (
-                        <span className="bg-redhat-dark-surface/80 text-gray-500 px-2 py-1 rounded text-xs">
+                        <span className="bg-redhat-dark-surface/80 text-redhat-text-secondary px-2 py-1 rounded text-xs">
                           ⚡ Efficiency ($50)
                         </span>
                       )}
-                      <span className="bg-redhat-dark-surface/80 text-gray-500 px-2 py-1 rounded text-xs">
+                      <span className="bg-redhat-dark-surface/80 text-redhat-text-secondary px-2 py-1 rounded text-xs">
                         💊 Energy Drink ($20)
                       </span>
-                      <span className="bg-redhat-dark-surface/80 text-gray-500 px-2 py-1 rounded text-xs">
+                      <span className="bg-redhat-dark-surface/80 text-redhat-text-secondary px-2 py-1 rounded text-xs">
                         ✨ Quality Boost ($30)
                       </span>
                     </div>
