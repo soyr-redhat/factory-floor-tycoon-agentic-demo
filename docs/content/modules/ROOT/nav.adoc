@@ -1,0 +1,4 @@
+* xref:index.adoc[Welcome]
+
+.Guide
+* xref:01-guide.adoc[Factory Floor Tycoon: Agentic AI Demo]

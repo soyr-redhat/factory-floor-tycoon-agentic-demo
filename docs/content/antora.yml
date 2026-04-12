@@ -1,0 +1,9 @@
+name: modules
+title: Factory Floor Tycoon Demo
+version: ~
+nav:
+  - modules/ROOT/nav.adoc
+asciidoc:
+  attributes:
+    demo_name: "Factory Floor Tycoon: Agentic AI Demo"
+    page-pagination: ''

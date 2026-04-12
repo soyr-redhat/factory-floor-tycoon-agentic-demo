@@ -1,0 +1,584 @@
+= Factory Floor Tycoon: Agentic AI Demo
+:stylesheet: redhat-theme.css
+:source-highlighter: highlight.js
+:icons: font
+
+== What You're Seeing
+
+This demo shows *agentic AI* in action through a competitive factory simulation. AI agents autonomously manage resources, make decisions, and respond to events, all powered by Large Language Models running on Red Hat OpenShift AI.
+
+=== What is Agentic AI?
+
+*Agentic AI* refers to AI systems that can autonomously pursue goals and take actions without constant human intervention.
+
+[cols="1,1", options="header"]
+|===
+|Traditional AI
+|Agentic AI
+
+|Responds to individual prompts
+|Pursues goals autonomously
+
+|Generates text or answers
+|Makes decisions and takes actions
+
+|Stateless interactions
+|Maintains context and memory
+
+|Requires human direction each step
+|Plans and executes multi-step tasks
+
+|Static behavior
+|Adapts to changing circumstances
+|===
+
+In this demo, you give an AI agent a system prompt defining its strategy, then watch it autonomously run a factory, making dozens of decisions based on its goals, the current state, and random events.
+
+=== The Goal
+
+Each AI agent is trying to **maximize profit** over the course of the game by:
+
+* Producing items from raw materials
+* Managing energy levels to sustain operations
+* Maintaining product quality for better prices
+* Responding to random events (machine breakdowns, rush orders, quality inspections)
+* Strategically using powerups and upgrades
+* Adapting its approach based on changing conditions
+
+The agent makes all these decisions on its own. You just define the strategy through the system prompt.
+
+=== How It Works
+
+. *You Define Strategy*: Write a system prompt that defines your agent's personality and decision-making approach
+. *Agent Observes*: The AI observes the current factory state (resources, energy, quality, active events)
+. *Agent Reasons*: The LLM analyzes the situation and decides on the best action based on its strategy
+. *Agent Acts*: The chosen action executes in the game engine
+. *Results Update*: The factory state changes, and the agent observes the new situation
+. *Repeat*: The agent continues this loop autonomously until the game ends
+
+All reasoning is visible in real-time. You can see exactly why the agent chose each action.
+
+=== Powered by Red Hat OpenShift AI
+
+The AI agents run on *Mistral-Small-24B-W8A8* served through Red Hat OpenShift AI Model As A Service (MAAS):
+
+* Scalable model serving for multiple concurrent agents
+* Low latency inference (~2-3 seconds per decision)
+* Enterprise security with API authentication
+* Optimized serving with W8A8 quantization for efficiency
+
+== Game Mechanics
+
+Understanding the rules helps you design better agent strategies:
+
+==== Resources
+
+Each agent manages the following resources:
+
+[cols="1,1,3", options="header"]
+|===
+|Resource
+|Starting Value
+|Description
+
+|*Energy*
+|100
+|Required to perform actions. Depletes with each task. Recover by resting.
+
+|*Materials*
+|50 units
+|Raw materials needed to produce items. Costs $5 to restock.
+
+|*Profit*
+|$0
+|Your score! Earn money by shipping items. Lose money on expenses.
+
+|*Quality Score*
+|85%
+|Quality rating affects item value. Drops if you skip quality checks.
+|===
+
+==== Available Actions
+
+Your agent can choose from these actions each turn:
+
+[cols="2,1,1,4", options="header"]
+|===
+|Action
+|Energy Cost
+|Material Cost
+|Description
+
+|*Produce Item*
+|15
+|5 materials
+|Create a new item from materials. Base value: $15
+
+|*Perform Quality Check*
+|10
+|0
+|Test and improve quality. +2-5% quality score
+
+|*Package Item*
+|5
+|0
+|Prepare items for shipping. Required before shipping
+
+|*Ship Items*
+|20
+|0
+|Send packaged items to customers. Earn profit based on quantity × quality
+
+|*Rest*
+|0
+|0
+|Recover 30-40 energy. No production, but essential for sustainability
+
+|*Restock Materials*
+|5
+|+30 materials
+|Purchase new materials. Costs $5
+
+|*Fix Machine*
+|15
+|0
+|Repair broken equipment (only when machine is broken)
+|===
+
+==== Powerups (Strategic Purchases)
+
+Once your agent earns profit, it can invest in powerups:
+
+[cols="2,1,4", options="header"]
+|===
+|Powerup
+|Cost
+|Effect
+
+|*Energy Drink*
+|$20
+|Immediately restore 30 energy
+
+|*Quality Boost*
+|$30
+|Immediately increase quality by 10%
+
+|*Efficiency Upgrade*
+|$50
+|**PERMANENT:** Reduce all energy costs by 20% for the rest of the game
+|===
+
+==== Random Events
+
+The factory environment is unpredictable! Events occur randomly and require agent adaptation:
+
+[cols="2,4", options="header"]
+|===
+|Event Type
+|Impact
+
+|*Machine Breakdown*
+|Cannot produce items until repaired with "Fix Machine" action
+
+|*Rush Order*
+|Double profit for the next shipment if shipped within 5 turns
+
+|*Quality Inspection*
+|Quality score temporarily reduced by 10%. Perform quality checks to recover
+
+|*Material Shortage*
+|Materials cost increases to $10 temporarily
+
+|*Energy Surge*
+|All actions cost 20% less energy for 5 turns (lucky break!)
+|===
+
+== Preset Agent Strategies
+
+The demo includes five pre-configured strategies that demonstrate different approaches to the same goal. Watching these compete reveals how system prompts shape behavior:
+
+=== Aggressive Producer
+
+*Philosophy:* Maximum production at all costs!
+
+*Key Behaviors:*
+
+* Produces as many items as possible
+* Ships quickly without excessive quality checks
+* Rarely rests (only below 20% energy)
+* Prioritizes speed and volume
+* Buys Energy Drinks to maintain high output
+
+*Best For:* Short games, environments without quality penalties
+
+=== Quality Focused
+
+*Philosophy:* Quality over quantity
+
+*Key Behaviors:*
+
+* Maintains quality score above 80% at all times
+* Performs regular quality checks
+* Only ships when quality is excellent
+* Rests when needed for consistent performance
+* Invests in Quality Boosts to maintain premium standards
+
+*Best For:* Long games, scenarios where quality directly impacts profit
+
+=== Balanced Optimizer
+
+*Philosophy:* Sustainable profit through balance
+
+*Key Behaviors:*
+
+* Balances production, quality, and energy management
+* Regular (but not excessive) quality checks
+* Rests when energy drops below 40%
+* Promptly fixes machines when broken
+* Saves to buy Efficiency Upgrade for long-term advantage
+
+*Best For:* Standard games, new players learning the mechanics
+
+=== Opportunistic Adapter
+
+*Philosophy:* React and capitalize on events
+
+*Key Behaviors:*
+
+* Quickly responds to random events
+* Fixes machines immediately
+* Capitalizes on rush orders
+* Maintains medium quality
+* Uses powerups strategically based on current needs
+
+*Best For:* Event-heavy games, dynamic environments
+
+=== Energy Efficient
+
+*Philosophy:* Minimize waste, maximize sustainability
+
+*Key Behaviors:*
+
+* Conserves energy for maximum long-term output
+* Rests frequently to maintain high energy
+* Works in short bursts
+* Prioritizes low-energy tasks (packaging)
+* Saves for Efficiency Upgrade early
+
+*Best For:* Very long games, marathon competitions
+
+== What to Observe
+
+As you watch the agent run, pay attention to these aspects of autonomous AI decision-making:
+
+=== Reasoning Transparency
+
+Every agent action is logged with full reasoning:
+
+[source,text]
+----
+Turn 15 - Agent: Balanced Worker
+Reasoning: "Energy at 45%, quality at 78%, and we have 8 produced
+items ready. I should perform a quality check before packaging to
+ensure we maintain good profit margins when shipping."
+
+Action: Perform Quality Check
+Result: Quality improved from 78% → 82%
+Energy: 45% → 35%
+----
+
+[NOTE]
+====
+This transparency is crucial for understanding and trusting agentic AI systems. In production environments, reasoning logs help debug unexpected behavior and verify agents are following intended strategies.
+====
+
+=== Real-Time Metrics
+
+The dashboard shows:
+
+* Current profit and trend lines
+* Energy level and consumption rate
+* Quality score over time
+* Inventory status (materials, items produced, items packaged)
+* Turn-by-turn action history
+
+== Creating Custom Agents
+
+Beyond the presets, you can write your own system prompts to test different strategies.
+
+=== Custom Prompt Template
+
+Use this template as a starting point:
+
+[source,text]
+----
+You are a [PERSONALITY] factory worker with a focus on [GOAL].
+
+Your core strategy:
+- [STRATEGIC PRINCIPLE 1]
+- [STRATEGIC PRINCIPLE 2]
+- [STRATEGIC PRINCIPLE 3]
+
+Energy management approach: [DESCRIPTION]
+Quality management approach: [DESCRIPTION]
+Response to events: [DESCRIPTION]
+
+When you have profit, prioritize: [POWERUP STRATEGY]
+----
+
+=== Example Custom Prompts
+
+==== The Data-Driven Optimizer
+
+[source,text]
+----
+You are a highly analytical factory worker who makes decisions based
+purely on data and expected value calculations.
+
+Your core strategy:
+- Calculate ROI before every action
+- Maximize expected profit per turn
+- Track efficiency metrics continuously
+- Adjust strategy based on performance data
+
+Energy management: Rest when energy drops below 35% to maintain
+optimal productivity. Each 1% of energy below 35% reduces
+efficiency by approximately 2%.
+
+Quality management: Maintain quality at 75-85% for optimal
+profit/effort ratio. Higher quality has diminishing returns.
+
+Response to events: Treat events as probability shifts. Rush orders
+justify higher energy expenditure. Material shortages reduce
+production priority.
+
+Powerup priority: Efficiency Upgrade first (permanent ROI), then
+Energy Drinks during rush orders, Quality Boosts only if quality
+drops below 70%.
+----
+
+==== The Risk-Taking Gambler
+
+[source,text]
+----
+You are a bold, risk-taking factory worker who believes fortune
+favors the brave.
+
+Your core strategy:
+- Take calculated risks for maximum potential reward
+- Never rest until energy is critically low (<15%)
+- Ship items frequently, even at lower quality
+- React aggressively to bonus opportunities
+
+Energy management: Push limits. Energy is meant to be spent, not
+saved. Buy Energy Drinks when you can afford them.
+
+Quality management: Quality is acceptable at 65%+. Speed to market
+matters more than perfection.
+
+Response to events: Double down on rush orders by spending all
+available resources. Machine breakdowns are just temporary setbacks.
+
+Powerup strategy: Energy Drinks > Efficiency Upgrade > Quality Boosts
+----
+
+==== The Conservative Minimalist
+
+[source,text]
+----
+You are an extremely cautious factory worker who prioritizes
+stability and risk avoidance above all else.
+
+Your core strategy:
+- Maintain high energy reserves at all times
+- Never let quality drop below 90%
+- Build large material buffers before production
+- Rest preemptively before energy becomes critical
+
+Energy management: Rest whenever energy falls below 60%. Prevention
+is better than exhaustion.
+
+Quality management: Perform quality checks after every 2 production
+actions. Premium quality ensures premium profits.
+
+Response to events: Prepare for worst-case scenarios. Maintain
+buffers that can handle multiple consecutive negative events.
+
+Powerup strategy: Save profit as a safety buffer. Only buy powerups
+when profit exceeds $100.
+----
+
+== Understanding Agent Behavior
+
+=== Comparing Strategies
+
+Running multiple agents reveals interesting patterns:
+
+* *Aggressive producers* often start strong but may run out of energy
+* *Quality-focused agents* build slowly but command higher prices
+* *Balanced agents* tend to be more consistent across different event scenarios
+* *Event-specialized agents* can excel when the right events occur
+
+The leaderboard shows which approaches succeeded, but the decision logs reveal *why*.
+
+=== Key Questions to Consider
+
+*Strategy Adherence*:: Does the agent stick to its defined strategy, or does it drift over time?
+
+*Event Adaptation*:: How quickly does the agent recognize and respond to changing conditions?
+
+*Resource Management*:: Does the agent balance short-term gains with long-term sustainability?
+
+*Decision Quality*:: Are the agent's reasoning explanations logically sound given the situation?
+
+== Advanced Prompt Engineering
+
+=== Adaptive Strategy Pattern
+
+Agents can be designed to shift strategy dynamically:
+
+[source,text]
+----
+You are an adaptive factory worker who adjusts strategy based on
+game progress.
+
+Early Game (Turns 1-15):
+- Focus on building resources and buying Efficiency Upgrade
+- Conservative energy management
+- Maintain moderate quality (75-80%)
+
+Mid Game (Turns 16-35):
+- Ramp up production with upgraded efficiency
+- Balance quality and quantity
+- Respond aggressively to events
+
+Late Game (Turns 36+):
+- Push for maximum output
+- Use all remaining resources
+- Take calculated risks for final profit boost
+----
+
+=== Event-Response Pattern
+
+Agents can encode explicit rules for handling specific situations:
+
+[source,text]
+----
+You are a strategic factory worker who has memorized optimal
+responses to every event type.
+
+Machine Breakdown: Immediately fix using "Fix Machine". Do not
+attempt production until resolved.
+
+Rush Order: Calculate if you have enough energy to produce + package +
+ship within 5 turns. If yes, go all-in. If no, ignore and continue
+normal operations.
+
+Quality Inspection: Perform 2-3 quality checks immediately to
+recover lost quality score.
+
+Material Shortage: Reduce production, focus on shipping existing
+inventory.
+
+Energy Surge: This is your opportunity! Produce as much as possible
+during the 5-turn window.
+----
+
+== Key Concepts: Agentic AI
+
+=== What Makes This "Agentic"?
+
+Traditional AI systems respond to individual prompts. Agentic AI systems:
+
+* *Pursue Goals Autonomously:* Your agent tries to maximize profit without your intervention
+* *Plan and Reason:* The agent considers multiple factors before each decision
+* *Adapt to Change:* Random events require the agent to adjust its approach
+* *Maintain State:* The agent remembers its situation and makes contextual decisions
+* *Execute Actions:* The agent doesn't just suggest, it actually takes actions in the environment
+
+=== System Prompt Engineering
+
+The system prompt is the foundation of your agent's behavior:
+
+[cols="1,3", options="header"]
+|===
+|Prompt Element
+|Impact on Agent Behavior
+
+|*Personality Definition*
+|Influences tone and decision-making style (aggressive vs. cautious)
+
+|*Core Strategy*
+|Provides guiding principles for prioritization
+
+|*Specific Rules*
+|Creates consistent behaviors (e.g., "rest below 40% energy")
+
+|*Goal Definition*
+|Directs the agent's optimization target
+
+|*Contextual Guidelines*
+|Helps agent adapt to different situations
+|===
+
+[TIP]
+====
+*Best Practice:* Specific, measurable guidelines produce more consistent agent behavior than vague instructions. Compare:
+
+* Vague: "Be careful with energy"
+* Specific: "Rest when energy drops below 40%"
+====
+
+=== Real-World Applications
+
+The concepts demonstrated in this lab apply to production AI systems:
+
+==== DevOps and Site Reliability
+
+* Autonomous incident response agents
+* Self-healing infrastructure
+* Intelligent resource scaling
+* Predictive maintenance
+
+==== Business Process Automation
+
+* Intelligent workflow routing
+* Dynamic resource allocation
+* Adaptive scheduling
+* Multi-step approval processes
+
+==== Data Engineering
+
+* Autonomous data pipeline management
+* Intelligent data quality monitoring
+* Adaptive ETL optimization
+* Self-tuning database operations
+
+==== Customer Service
+
+* Multi-turn problem solving
+* Context-aware support agents
+* Escalation decision-making
+* Proactive issue detection
+
+=== The Role of Red Hat OpenShift AI
+
+This demo is powered by Red Hat OpenShift AI Model As A Service (MAAS), which provides:
+
+* *Scalable Model Serving:* The Mistral-Small-24B model serves multiple concurrent agents
+* *Low Latency Inference:* Fast response times enable real-time decision-making
+* *Enterprise Security:* API authentication and network policies protect the model
+* *Observability:* Metrics and logging for monitoring agent performance
+* *Cost Efficiency:* Optimized serving infrastructure with W8A8 quantization
+
+== Additional Resources
+
+* Red Hat OpenShift AI Documentation: https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed
+* Mistral AI Model Documentation: https://docs.mistral.ai/
+* FastAPI WebSocket Guide: https://fastapi.tiangolo.com/advanced/websockets/
+* Agentic AI Design Patterns: https://www.anthropic.com/research/building-effective-agents
+* GitHub Repository (Source Code): https://github.com/soyr-redhat/factory-floor-tycoon-agentic-demo
+
+---
+
+_Factory Floor Tycoon v1.1.0 | Powered by Red Hat OpenShift AI_

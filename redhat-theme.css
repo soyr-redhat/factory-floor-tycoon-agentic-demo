@@ -1,0 +1,276 @@
+/* Red Hat Theme for AsciiDoc */
+
+@font-face {
+  font-family: 'RedHatText';
+  src: url('fonts/RedHatText-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'RedHatText';
+  src: url('fonts/RedHatText-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'RedHatText';
+  src: url('fonts/RedHatText-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+}
+
+:root {
+  --rh-red: #CC0000;
+  --rh-pink: #FAB6B6;
+  --rh-black: #000000;
+  --rh-dark-gray: #4D4D4D;
+  --rh-light-gray: #f9f9f9;
+}
+
+body {
+  font-family: "RedHatText", Overpass, "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  max-width: 75em;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "RedHatText", Overpass, "Open Sans", Helvetica, Arial, sans-serif;
+  color: var(--rh-black);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+h1 {
+  color: var(--rh-red);
+  font-size: 2.5em;
+  border-bottom: 3px solid var(--rh-red);
+  padding-bottom: 10px;
+  margin-top: 0;
+}
+
+h2 {
+  color: var(--rh-red);
+  font-size: 2em;
+  border-bottom: 2px solid var(--rh-pink);
+  padding-bottom: 8px;
+  margin-top: 1.5em;
+}
+
+h3 {
+  color: var(--rh-dark-gray);
+  font-size: 1.5em;
+  margin-top: 1.3em;
+}
+
+h4 {
+  color: var(--rh-dark-gray);
+  font-size: 1.2em;
+  margin-top: 1.2em;
+}
+
+/* Links */
+a {
+  color: var(--rh-red);
+  text-decoration: none;
+}
+
+a:hover {
+  color: #a30000;
+  text-decoration: underline;
+}
+
+/* Code blocks */
+pre {
+  background-color: #f5f5f5;
+  border-left: 4px solid var(--rh-red);
+  padding: 15px;
+  overflow-x: auto;
+  border-radius: 4px;
+}
+
+code {
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+p code, li code {
+  background-color: #f5f5f5;
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: var(--rh-red);
+}
+
+/* Tables */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 20px 0;
+}
+
+table th {
+  background-color: var(--rh-red);
+  color: white;
+  padding: 12px;
+  text-align: left;
+  font-weight: 700;
+}
+
+table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+}
+
+table tr:nth-child(even) {
+  background-color: var(--rh-light-gray);
+}
+
+table tr:hover {
+  background-color: #f0f0f0;
+}
+
+/* Admonition blocks (NOTE, TIP, IMPORTANT, etc.) */
+.admonitionblock {
+  margin: 20px 0;
+  padding: 15px;
+  border-left: 4px solid var(--rh-dark-gray);
+  background-color: var(--rh-light-gray);
+  border-radius: 4px;
+}
+
+.admonitionblock.note {
+  border-left-color: #0066cc;
+  background-color: #e6f2ff;
+}
+
+.admonitionblock.tip {
+  border-left-color: var(--rh-dark-gray);
+  background-color: #f5f5f5;
+}
+
+.admonitionblock.important {
+  border-left-color: var(--rh-red);
+  background-color: #ffe6e6;
+}
+
+.admonitionblock.warning {
+  border-left-color: #ff9900;
+  background-color: #fff5e6;
+}
+
+.admonitionblock td.icon {
+  font-weight: bold;
+  color: var(--rh-red);
+  padding-right: 10px;
+}
+
+/* Lists */
+ul, ol {
+  margin: 15px 0;
+  padding-left: 30px;
+}
+
+li {
+  margin: 8px 0;
+}
+
+/* Strong text */
+strong, b {
+  font-weight: 700;
+  color: var(--rh-black);
+}
+
+/* Emphasized text */
+em, i {
+  font-style: italic;
+  color: var(--rh-dark-gray);
+}
+
+/* Horizontal rule */
+hr {
+  border: none;
+  border-top: 2px solid var(--rh-pink);
+  margin: 30px 0;
+}
+
+/* Quoted text */
+.quoteblock {
+  border-left: 4px solid var(--rh-pink);
+  padding-left: 20px;
+  margin: 20px 0;
+  font-style: italic;
+  color: var(--rh-dark-gray);
+}
+
+/* Source code listings with titles */
+.listingblock .title {
+  color: var(--rh-red);
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+/* Sidebar blocks */
+.sidebarblock {
+  background-color: var(--rh-light-gray);
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 15px;
+  margin: 20px 0;
+}
+
+/* Example blocks */
+.exampleblock {
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 15px;
+  margin: 20px 0;
+}
+
+/* Definition lists */
+dt {
+  font-weight: 700;
+  color: var(--rh-red);
+  margin-top: 15px;
+}
+
+dd {
+  margin-left: 20px;
+  margin-bottom: 10px;
+}
+
+/* Footer */
+#footer {
+  margin-top: 50px;
+  padding-top: 20px;
+  border-top: 2px solid var(--rh-pink);
+  text-align: center;
+  color: var(--rh-dark-gray);
+  font-size: 0.9em;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 2em;
+  }
+
+  h2 {
+    font-size: 1.6em;
+  }
+}

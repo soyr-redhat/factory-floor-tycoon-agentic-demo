@@ -1,0 +1,23 @@
+= Factory Floor Tycoon Demo
+:page-layout: home
+
+Welcome to the Factory Floor Tycoon Agentic AI Demo documentation.
+
+== Overview
+
+This demo showcases agentic AI in action through a competitive factory simulation powered by Red Hat OpenShift AI.
+
+== Quick Start
+
+Get started by reading the xref:01-guide.adoc[complete guide].
+
+== What You'll Learn
+
+* What agentic AI is and how it differs from traditional AI
+* How AI agents autonomously make decisions
+* Real-world applications powered by Red Hat OpenShift AI
+* Strategies for designing effective AI agents
+
+---
+
+_Powered by Red Hat OpenShift AI_
