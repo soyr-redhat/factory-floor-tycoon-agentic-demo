@@ -38,7 +38,7 @@ spec:
               name: llm-credentials
               key: api-key
         - name: MODEL_NAME
-          value: "kimi-k2-5"
+          value: "Mistral-Small-24B-W8A8"
         - name: LEADERBOARD_PATH
           value: "/data/leaderboard.json"
         volumeMounts:

@@ -18,7 +18,7 @@ Program AI agents with custom system prompts and watch them compete in a simulat
 ## Architecture
 
 - **Frontend**: React + Vite + Tailwind CSS + WebSockets (nginx-unprivileged)
-- **Backend**: Python FastAPI + WebSockets + LLM integration (Kimi k2.5)
+- **Backend**: Python FastAPI + WebSockets + LLM integration (Mistral-Small-24B-W8A8)
 - **Deployment**: OpenShift with automated CI/CD
 - **CI/CD**: GitHub Actions + OpenShift BuildConfig webhooks
 
@@ -44,9 +44,9 @@ cd backend
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
-export LLM_API_URL="http://maas.apps.ocp.cloud.rhai-tmm.dev/kimi-k25/kimi-k2-5/v1"
-export LLM_API_KEY="your-long-lived-token"
-export MODEL_NAME="kimi-k2-5"
+export LLM_API_URL="https://litellm-litemaas.apps.prod.rhoai.rh-aiservices-bu.com/v1"
+export LLM_API_KEY="your-api-key"
+export MODEL_NAME="Mistral-Small-24B-W8A8"
 uvicorn main:app --reload
 
 # Frontend
@@ -58,5 +58,5 @@ npm run dev
 ## Environment Variables
 
 - `LLM_API_URL` - MAAS endpoint URL
-- `LLM_API_KEY` - MAAS API token (JWT long-lived token)
-- `MODEL_NAME` - Model to use for agents (default: kimi-k2-5)
+- `LLM_API_KEY` - MAAS API token
+- `MODEL_NAME` - Model to use for agents (default: Mistral-Small-24B-W8A8)
