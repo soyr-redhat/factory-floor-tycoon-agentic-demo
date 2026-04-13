@@ -273,8 +273,7 @@ Recent Events:
                 messages=messages,
                 tools=self.get_available_tools(),
                 tool_choice="auto",  # Let model decide whether to use a tool
-                temperature=0.3,  # Lower for faster, more focused decisions
-                max_tokens=200  # Limit reasoning verbosity for speed
+                temperature=0.7
             )
 
             message = response.choices[0].message
