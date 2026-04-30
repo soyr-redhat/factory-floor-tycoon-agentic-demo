@@ -263,7 +263,7 @@ Recent Events:
                 context += f"- {action_display} → {action_record['result']}\n"
 
         messages = [
-            {"role": "system", "content": self.system_prompt},
+            {"role": "system", "content": self.system_prompt + "\n\nCRITICAL INSTRUCTIONS:\n1. Think briefly (maximum 1-2 sentences)\n2. Use tool calling to select your action\n3. You MUST end your response with this exact format: [{\"name\": \"action_name\", \"arguments\": {}}]\n\nExample response: 'Need energy to continue. [{\"name\": \"rest\", \"arguments\": {}}]'"},
             {"role": "user", "content": context + "\n\nWhat action should you take next to maximize profit?"}
         ]
 

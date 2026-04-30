@@ -67,7 +67,7 @@ class FactoryState(BaseModel):
     is_running: bool = False
 
 class GameConfig(BaseModel):
-    num_rounds: int = Field(default=50, ge=10, le=200)
+    num_rounds: int = Field(default=25, ge=10, le=200)
     event_frequency: float = Field(default=0.15, ge=0.0, le=1.0)
     starting_inventory: int = 10
     starting_orders: int = 3

@@ -260,9 +260,10 @@ async def post_to_leaderboard(entry: LeaderboardEntry):
     entry_dict = entry.model_dump()
     entry_dict['timestamp'] = datetime.utcnow().isoformat()
 
-    # Check for near-duplicate submissions (same agent, user, and stats within 5 minutes)
+    # Check for near-duplicate submissions or updates (same agent and stats within 5 minutes)
     cutoff_time = datetime.utcnow()
     is_duplicate = False
+    updated_existing = False
     for existing in entries:
         # Parse existing timestamp
         try:
@@ -271,27 +272,41 @@ async def post_to_leaderboard(entry: LeaderboardEntry):
         except:
             time_diff = float('inf')
 
-        # Check if this is a duplicate (same agent, user, and nearly identical results within 5 min)
+        # Check if this is the same game result (same agent and nearly identical results within 5 min)
         if (existing.get('agent_name') == entry_dict['agent_name'] and
-            existing.get('user_name') == entry_dict['user_name'] and
             abs(existing.get('profit', 0) - entry_dict['profit']) < 0.01 and
             existing.get('items_shipped') == entry_dict['items_shipped'] and
             time_diff < 300):  # 5 minutes
-            is_duplicate = True
-            print(f"Duplicate submission detected: {entry_dict['agent_name']} by {entry_dict['user_name']}")
-            break
 
-    if not is_duplicate:
+            # If user_name changed from Anonymous, update it (agent was renamed)
+            if existing.get('user_name') == 'Anonymous' and entry_dict['user_name'] != 'Anonymous':
+                print(f"Updating agent name: {entry_dict['agent_name']} from Anonymous to {entry_dict['user_name']}")
+                existing['user_name'] = entry_dict['user_name']
+                existing['strategy_preview'] = entry_dict['strategy_preview']
+                existing['timestamp'] = entry_dict['timestamp']
+                updated_existing = True
+                break
+            # If it's the exact same user_name, it's a duplicate
+            elif existing.get('user_name') == entry_dict['user_name']:
+                is_duplicate = True
+                print(f"Duplicate submission detected: {entry_dict['agent_name']} by {entry_dict['user_name']}")
+                break
+
+    if not is_duplicate and not updated_existing:
         # Add to leaderboard
         entries.append(entry_dict)
 
+    if not is_duplicate:
         # Keep only top 1000 entries to prevent unbounded growth
         entries.sort(key=lambda x: x.get('profit', 0), reverse=True)
         entries = entries[:1000]
 
         save_leaderboard(entries)
 
-        return {"success": True, "rank": entries.index(entry_dict) + 1, "duplicate": False}
+        if updated_existing:
+            return {"success": True, "rank": -1, "duplicate": False, "message": "Agent name updated"}
+        else:
+            return {"success": True, "rank": entries.index(entry_dict) + 1, "duplicate": False}
     else:
         return {"success": True, "rank": -1, "duplicate": True, "message": "Duplicate submission ignored"}
 
