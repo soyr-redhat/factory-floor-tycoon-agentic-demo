@@ -14,7 +14,7 @@ function FactoryFloor({ state, agents, roundData, recentEvents = [] }) {
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold">Factory Floor</h2>
         <div className="text-lg font-mono">
-          Round: <span className="text-redhat-red">{roundData?.round || 0}</span> / 50
+          Round: <span className="text-redhat-red">{roundData?.round || 0}</span> / 25
         </div>
       </div>
 

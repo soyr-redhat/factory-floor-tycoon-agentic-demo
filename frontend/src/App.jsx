@@ -67,7 +67,7 @@ function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           agents: selectedAgents,
-          config: { num_rounds: 50, event_frequency: 0.15 }
+          config: { num_rounds: 25, event_frequency: 0.15 }
         })
       })
 

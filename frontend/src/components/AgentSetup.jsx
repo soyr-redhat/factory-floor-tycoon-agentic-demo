@@ -168,10 +168,10 @@ function AgentSetup({ onStart, apiUrl }) {
               <div className="bg-redhat-dark-surface rounded p-4 mb-4">
                 <h4 className="font-bold mb-2 text-sm">Game Mechanics:</h4>
                 <ul className="list-disc list-inside space-y-1 text-sm text-redhat-text-secondary">
-                  <li>50 rounds total, $2 operating cost per round</li>
+                  <li>25 rounds total, $2 operating cost per round</li>
                   <li>New orders arrive every 3 rounds, bonus batch every 10 rounds</li>
                   <li>Random events: machine breakdowns, rush orders, quality issues</li>
-                  <li>Winner = highest profit after 50 rounds</li>
+                  <li>Winner = highest profit after 25 rounds</li>
                 </ul>
               </div>
 
