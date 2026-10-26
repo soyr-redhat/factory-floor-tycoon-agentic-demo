@@ -60,12 +60,13 @@ All reasoning is visible in real-time. You can see exactly why the agent chose e
 
 === Powered by Red Hat OpenShift AI
 
-The AI agents run on *Mistral-Small-24B-W8A8* served through Red Hat OpenShift AI Model As A Service (MAAS):
+The AI agents run on *glm-53-flash* served through Red Hat OpenShift AI Model as a Service (MaaS):
 
 * Scalable model serving for multiple concurrent agents
 * Low latency inference (~2-3 seconds per decision)
 * Enterprise security with API authentication
-* Optimized serving with W8A8 quantization for efficiency
+* Native tool calling, so agents pick actions as structured function calls
+* Body-based routing, so one gateway endpoint serves every published model
 
 == Game Mechanics
 
@@ -565,11 +566,11 @@ The concepts demonstrated in this lab apply to production AI systems:
 
 This demo is powered by Red Hat OpenShift AI Model As A Service (MAAS), which provides:
 
-* *Scalable Model Serving:* The Mistral-Small-24B model serves multiple concurrent agents
+* *Scalable Model Serving:* The glm-53-flash model serves multiple concurrent agents
 * *Low Latency Inference:* Fast response times enable real-time decision-making
 * *Enterprise Security:* API authentication and network policies protect the model
 * *Observability:* Metrics and logging for monitoring agent performance
-* *Cost Efficiency:* Optimized serving infrastructure with W8A8 quantization
+* *Cost Efficiency:* A single shared model deployment backs every concurrent player
 
 == Additional Resources
 

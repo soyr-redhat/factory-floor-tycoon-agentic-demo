@@ -37,8 +37,10 @@ spec:
             secretKeyRef:
               name: llm-credentials
               key: api-key
+        # Must be the fully qualified model path: the MaaS gateway uses
+        # body-based routing and rejects bare model names with a 404.
         - name: MODEL_NAME
-          value: "Qwen3.6-35B-A3B"
+          value: "publishers/prelude-maas/models/glm-53-flash"
         - name: LEADERBOARD_PATH
           value: "/data/leaderboard.json"
         volumeMounts:

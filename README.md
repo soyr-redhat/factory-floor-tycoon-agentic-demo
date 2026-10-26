@@ -18,7 +18,7 @@ Program AI agents with custom system prompts and watch them compete in a simulat
 ## Architecture
 
 - **Frontend**: React + Vite + Tailwind CSS + WebSockets (nginx-unprivileged)
-- **Backend**: Python FastAPI + WebSockets + LLM integration (Mistral-Small-24B-W8A8)
+- **Backend**: Python FastAPI + WebSockets + LLM integration (glm-53-flash on Red Hat MaaS)
 - **Deployment**: OpenShift with automated CI/CD
 - **CI/CD**: GitHub Actions + OpenShift BuildConfig webhooks
 
@@ -44,9 +44,9 @@ cd backend
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
-export LLM_API_URL="https://litellm-litemaas.apps.prod.rhoai.rh-aiservices-bu.com/v1"
+export LLM_API_URL="https://maas.apps.ocp.cloud.rhai-tmm.dev/v1"
 export LLM_API_KEY="your-api-key"
-export MODEL_NAME="Mistral-Small-24B-W8A8"
+export MODEL_NAME="publishers/prelude-maas/models/glm-53-flash"
 uvicorn main:app --reload
 
 # Frontend
@@ -57,6 +57,12 @@ npm run dev
 
 ## Environment Variables
 
-- `LLM_API_URL` - MAAS endpoint URL
-- `LLM_API_KEY` - MAAS API token
-- `MODEL_NAME` - Model to use for agents (default: Mistral-Small-24B-W8A8)
+- `LLM_API_URL` - MaaS endpoint URL, including the `/v1` suffix
+- `LLM_API_KEY` - MaaS API token
+- `MODEL_NAME` - Model to use for agents (default: `publishers/prelude-maas/models/glm-53-flash`)
+
+The MaaS gateway routes requests by the `model` field in the request body
+(body-based routing), so `MODEL_NAME` must be the fully qualified model path.
+A bare name such as `glm-53-flash` returns a 404. Run
+`curl -H "Authorization: Bearer $LLM_API_KEY" $LLM_API_URL/models` to list the
+available model paths.

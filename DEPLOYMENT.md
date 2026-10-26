@@ -40,7 +40,7 @@ Go to: https://github.com/soyr-redhat/factory-floor-tycoon-agentic-demo/settings
 Add:
 ```
 OPENSHIFT_LOGIN_TOKEN=<your-token>
-LLM_API_URL=https://litellm-litemaas.apps.prod.rhoai.rh-aiservices-bu.com/v1
+LLM_API_URL=https://maas.apps.ocp.cloud.rhai-tmm.dev/v1
 LLM_API_KEY=<your-api-key>
 ```
 
@@ -96,9 +96,9 @@ python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 
-export LLM_API_URL="https://litellm-litemaas.apps.prod.rhoai.rh-aiservices-bu.com/v1"
+export LLM_API_URL="https://maas.apps.ocp.cloud.rhai-tmm.dev/v1"
 export LLM_API_KEY="sk-..."
-export MODEL_NAME="Mistral-Small-24B-W8A8"
+export MODEL_NAME="publishers/prelude-maas/models/glm-53-flash"
 
 uvicorn main:app --reload
 ```
